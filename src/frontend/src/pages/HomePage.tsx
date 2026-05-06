@@ -148,18 +148,18 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.34 }}
-                className="flex flex-col sm:flex-row items-center lg:items-start gap-4 mb-10"
+                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10"
               >
                 <Link
                   to="/explore"
-                  className="cta-primary px-9 py-3.5 text-sm"
+                  className="cta-primary px-9 py-3.5 text-sm w-full sm:w-auto text-center"
                   data-ocid="home.start_exploration_button"
                 >
                   Start Exploration
                 </Link>
                 <Link
                   to="/lab"
-                  className="cta-secondary px-9 py-3.5 text-sm"
+                  className="cta-secondary px-9 py-3.5 text-sm w-full sm:w-auto text-center"
                   data-ocid="home.try_lab_button"
                 >
                   Try Interactive Lab
