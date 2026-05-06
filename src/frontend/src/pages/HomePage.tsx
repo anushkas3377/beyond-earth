@@ -7,7 +7,7 @@ import {
   Rocket,
   Timer,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 const EARTH_IMG = "/assets/generated/earth-hero.dim_1200x1200.jpg";
 const MOON_IMG = "/assets/generated/moon-hero.dim_600x600.jpg";
@@ -219,19 +219,7 @@ export default function HomePage() {
                   border: "1px solid rgba(108,99,255,0.12)",
                 }}
               />
-              {/* Earth sphere */}
-              <div
-                className="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[440px] lg:h-[440px] rounded-full overflow-hidden"
-                style={{
-                  boxShadow:
-                    "0 0 80px rgba(0,100,255,0.45), 0 0 160px rgba(0,100,255,0.2), 0 0 260px rgba(0,229,255,0.1)",
-                }}
-              >
-                <motion.img
-                  src={EARTH_IMG}
-                  alt="Earth from Apollo 17"
-                  className="w-full h-full object-cover"
-                  animate={{ rotate: 360 }}
+              {/* Earth sphere */} }}
                   transition={{
                     duration: 30,
                     repeat: Number.POSITIVE_INFINITY,
