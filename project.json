@@ -1,0 +1,28 @@
+{
+  "overview": "Beyond Earth is a premium, futuristic space exploration website with an immersive dark UI featuring glassmorphism design, animated starfields, and neon accents. Explore planets, simulate astronaut experiences, build custom space missions, run real physics calculations, and learn about real space agencies — all in a cinematic, NASA-inspired interface.",
+  "features": [
+    "Interactive planet explorer with Mercury, Venus, Earth, Mars, Jupiter, Saturn",
+    "3-step space mission builder with launch outcome simulation",
+    "Astronaut weight & gravity simulator for Earth, Moon, and Mars",
+    "Physics lab with orbital velocity, escape velocity, and rocket equation calculators",
+    "Real astronaut profiles: Neil Armstrong, Kalpana Chawla, Yuri Gagarin, Sunita Williams, Buzz Aldrin",
+    "Space agencies showcase: NASA, ISRO, ESA, Roscosmos, CNSA with real logos and links",
+    "Interactive timeline of major space exploration milestones",
+    "Glassmorphism UI with animated starfield and neon glow effects throughout",
+    "Fully responsive with mobile hamburger menu",
+    "Contact form with validation and success/error feedback"
+  ],
+  "category": "education-science",
+  "tags": [
+    "space",
+    "education",
+    "interactive",
+    "astronomy",
+    "futuristic",
+    "glassmorphism",
+    "nasa",
+    "planets",
+    "simulation"
+  ],
+  "last_updated": "2026-05-04T07:37:30.543Z"
+}
