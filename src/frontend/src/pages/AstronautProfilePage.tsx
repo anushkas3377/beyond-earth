@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { ArrowLeft, Award, Clock, Globe, Rocket, Star } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { ASTRONAUTS_DATA } from "./AstronautsPage";
 
 export default function AstronautProfilePage() {

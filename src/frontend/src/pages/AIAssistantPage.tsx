@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bot, Send, Sparkles, Trash2, User } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 
 interface Message {

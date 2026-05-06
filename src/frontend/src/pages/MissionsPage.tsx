@@ -10,7 +10,7 @@ import {
   Shield,
   XCircle,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { useState } from "react";
 

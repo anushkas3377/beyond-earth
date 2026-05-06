@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ExternalLink, Globe, Microscope, Users, Zap } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 interface Agency {

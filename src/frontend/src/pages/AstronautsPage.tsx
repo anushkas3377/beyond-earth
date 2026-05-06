@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import type { Astronaut } from "@/types/space";
 import { Link } from "@tanstack/react-router";
-import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 
 export const ASTRONAUTS_DATA: Astronaut[] = [

@@ -9,7 +9,7 @@ import {
   Telescope,
   User,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 const VISION_PURPOSE = [

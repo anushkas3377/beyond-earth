@@ -1,5 +1,5 @@
 import { Calendar, Clock, Timer } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import type { ElementType } from "react";
 
 interface TimelineSection {

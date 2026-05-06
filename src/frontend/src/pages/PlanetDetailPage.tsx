@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { ArrowLeft, Globe, Thermometer } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { PLANETS } from "./ExplorePage";
 
 export default function PlanetDetailPage() {
