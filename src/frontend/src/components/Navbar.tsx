@@ -48,8 +48,8 @@ export default function Navbar() {
             <img
               src="/assets/logo.png"
               alt="Beyond Earth logo"
-              className="h-10 w-auto flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-              style={{ filter: "drop-shadow(0 0 8px rgba(0,229,255,0.5))" }}
+              className="h-12 w-auto flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              style={{ filter: "drop-shadow(0 0 12px rgba(0,229,255,0.8))" }}
             />
             <span
               className="hidden sm:block font-display font-bold text-lg tracking-wide"
