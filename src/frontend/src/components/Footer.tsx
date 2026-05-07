@@ -28,11 +28,6 @@ const FOOTER_SECTIONS = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
-  const hostname =
-    typeof window !== "undefined"
-      ? encodeURIComponent(window.location.hostname)
-      : "";
-
   return (
     <footer
       className="relative"
@@ -92,17 +87,6 @@ export default function Footer() {
           style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
         >
           <span>© {year} Beyond Earth. All rights reserved.</span>
-          <span>
-            Built with love using{" "}
-            <a
-              href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${hostname}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-neon-cyan transition-colors underline underline-offset-2"
-            >
-              caffeine.ai
-            </a>
-          </span>
         </div>
       </div>
     </footer>
