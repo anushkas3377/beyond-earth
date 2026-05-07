@@ -219,23 +219,27 @@ export default function HomePage() {
                   border: "1px solid rgba(108,99,255,0.12)",
                 }}
               />
-              {/* Earth sphere */} }}
-                  transition={{
-                    duration: 30,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                  }}
-                  style={{ willChange: "transform" }}
-                />
-                {/* Atmosphere overlay */}
-                <div
-                  className="absolute inset-0 rounded-full pointer-events-none"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.04) 0%, transparent 50%), radial-gradient(circle, transparent 55%, rgba(0,40,120,0.55) 80%, rgba(0,10,40,0.8) 100%)",
-                  }}
-                />
-              </div>
+              {/* Earth sphere */}
+<div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden"
+  style={{
+    boxShadow: "0 0 60px rgba(0,100,220,0.4), 0 0 120px rgba(0,229,255,0.15)",
+  }}
+>
+  <motion.img
+    src={EARTH_IMG}
+    alt="Earth"
+    className="w-full h-full object-cover rounded-full"
+    animate={{ rotate: 360 }}
+    transition={{
+      duration: 30,
+      repeat: Number.POSITIVE_INFINITY,
+      ease: "linear",
+    }}
+    style={{ willChange: "transform" }}
+  />
+  
+</div>
+        
               {/* Atmosphere glow */}
               <div
                 className="absolute inset-0 rounded-full pointer-events-none"
