@@ -1039,4 +1039,4 @@ function LiveLaunches() {
       </div>
     </section>
   </>
-);
+);}
