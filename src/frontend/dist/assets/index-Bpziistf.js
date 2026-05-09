@@ -6789,7 +6789,7 @@ function mergeLoginOptions(loginOptions, otherLoginOptions) {
   };
 }
 const ONE_HOUR_IN_NANOSECONDS = BigInt(36e11);
-const DEFAULT_IDENTITY_PROVIDER = "https://id.ai";
+const DEFAULT_IDENTITY_PROVIDER = "https://identity.internetcomputer.org/";
 const InternetIdentityReactContext = reactExports.createContext(void 0);
 async function createAuthClient(createOptions) {
   const config = await loadConfig();
@@ -23649,7 +23649,7 @@ const FOOTER_SECTIONS = [
   {
     title: "Experience",
     links: [
-      { label: "Astronaut", to: "/astronaut" },
+      { label: "Astronauts", to: "/astronauts" },
       { label: "Interactive Lab", to: "/lab" },
       { label: "Space Agencies", to: "/agencies" }
     ]
@@ -23664,7 +23664,6 @@ const FOOTER_SECTIONS = [
 ];
 function Footer() {
   const year = (/* @__PURE__ */ new Date()).getFullYear();
-  const hostname = typeof window !== "undefined" ? encodeURIComponent(window.location.hostname) : "";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "footer",
     {
@@ -23705,32 +23704,16 @@ function Footer() {
               ) }, link.to)) })
             ] }, section.title))
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
             "div",
             {
               className: "mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600",
               style: { borderTop: "1px solid rgba(255,255,255,0.05)" },
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-                  "© ",
-                  year,
-                  " Beyond Earth. All rights reserved."
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-                  "Built with love using",
-                  " ",
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    "a",
-                    {
-                      href: `https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${hostname}`,
-                      target: "_blank",
-                      rel: "noopener noreferrer",
-                      className: "hover:text-neon-cyan transition-colors underline underline-offset-2",
-                      children: "caffeine.ai"
-                    }
-                  )
-                ] })
-              ]
+              children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                "© ",
+                year,
+                " Beyond Earth. All rights reserved."
+              ] })
             }
           )
         ] })
@@ -24438,7 +24421,7 @@ const NAV_LINKS = [
   { label: "Explore", to: "/explore" },
   { label: "Timeline", to: "/timeline" },
   { label: "Missions", to: "/missions" },
-  { label: "Astronaut", to: "/astronaut" },
+  { label: "Astronauts", to: "/astronauts" },
   { label: "Lab", to: "/lab" },
   { label: "Agencies", to: "/agencies" },
   { label: "About", to: "/about" },
@@ -24479,8 +24462,8 @@ function Navbar() {
                   {
                     src: "/assets/logo.png",
                     alt: "Beyond Earth logo",
-                    className: "h-10 w-auto flex-shrink-0 transition-transform duration-300 group-hover:scale-110",
-                    style: { filter: "drop-shadow(0 0 8px rgba(0,229,255,0.5))" }
+                    className: "h-12 w-auto flex-shrink-0 transition-transform duration-300 group-hover:scale-110",
+                    style: { filter: "drop-shadow(0 0 12px rgba(0,229,255,0.8))" }
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -36370,10 +36353,10 @@ const FEATURES$1 = [
   },
   {
     emoji: "🧑‍🚀",
-    title: "Astronaut Simulation",
-    desc: "Simulate your body in different gravity environments — Moon, Mars, and beyond.",
-    to: "/astronaut",
-    label: "Simulate"
+    title: "Astronaut Profiles",
+    desc: "Explore the lives and missions of legendary astronauts who shaped space exploration.",
+    to: "/astronauts",
+    label: "View Astronauts"
   },
   {
     emoji: "⏳",
@@ -37426,7 +37409,7 @@ function AstronautsPage() {
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       Link,
                       {
-                        to: "/astronaut/$slug",
+                        to: "/astronauts/$slug",
                         params: { slug: astronaut.slug },
                         className: "cta-secondary inline-flex items-center justify-center gap-2 text-xs font-bold font-display px-5 py-2.5 rounded-lg w-full text-center",
                         "data-ocid": `astronauts.view_profile_button.${i + 1}`,
@@ -38678,7 +38661,7 @@ const PLANETS = [
     slug: "neptune",
     name: "Neptune",
     image: "/assets/generated/neptune-planet.dim_800x800.jpg",
-    description: "The windiest planet — Neptune has supersonic winds reaching 2,100 km/h, the fastest in the solar system, fueled by its internal heat source.",
+    description: "The windiest planet — Neptune has supersonic winds reaching 2,100 km/h, the fastest in the solar system.",
     keyFeature: "Wind speeds: up to 2,100 km/h",
     didYouKnow: "Neptune's largest moon Triton orbits backwards — it was likely captured from the Kuiper Belt.",
     distanceFromSun: "4.5 billion km",
@@ -38698,9 +38681,9 @@ const PLANETS = [
     slug: "moon",
     name: "Moon",
     image: "/assets/generated/moon-planet.dim_800x800.jpg",
-    description: "Earth's only natural satellite — a barren, cratered world with no atmosphere, responsible for our ocean tides and a constant companion across human history.",
+    description: "Earth's only natural satellite — a barren, cratered world with no atmosphere, responsible for our ocean tides.",
     keyFeature: "Only natural satellite of Earth",
-    didYouKnow: "The Moon is slowly moving away from Earth at about 3.8 cm per year — in billions of years it will appear much smaller in our sky.",
+    didYouKnow: "The Moon is slowly moving away from Earth at about 3.8 cm per year.",
     distanceFromSun: "~384,400 km from Earth",
     diameter: "3,474 km",
     moons: 0,
@@ -38728,313 +38711,385 @@ const PLANET_SUBTITLES = {
 function ExplorePage() {
   useNavigate();
   const [selectedIndex, setSelectedIndex] = reactExports.useState(2);
+  const [activeTab, setActiveTab] = reactExports.useState("solar-system");
+  const [news, setNews] = reactExports.useState([]);
+  const [newsLoading, setNewsLoading] = reactExports.useState(false);
+  const [newsError, setNewsError] = reactExports.useState(false);
   const planet = PLANETS[selectedIndex];
-  const selectPlanet = (index2) => {
-    setSelectedIndex(index2);
-  };
+  reactExports.useEffect(() => {
+    if (activeTab === "latest-news" && news.length === 0) {
+      setNewsLoading(true);
+      setNewsError(false);
+      fetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=9").then((res) => res.json()).then((data) => {
+        setNews(data.results);
+        setNewsLoading(false);
+      }).catch(() => {
+        setNewsError(true);
+        setNewsLoading(false);
+      });
+    }
+  }, [activeTab]);
+  const selectPlanet = (index2) => setSelectedIndex(index2);
   const goNext = () => selectPlanet((selectedIndex + 1) % PLANETS.length);
   const goPrev = () => selectPlanet((selectedIndex - 1 + PLANETS.length) % PLANETS.length);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      className: "min-h-screen relative overflow-x-hidden",
-      "data-ocid": "explore.page",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
-          {
-            className: "fixed inset-0 pointer-events-none transition-all duration-700",
-            style: {
-              background: `radial-gradient(ellipse at 60% 30%, ${planet.tintColor} 0%, transparent 70%)`,
-              zIndex: 1
-            },
-            "aria-hidden": "true"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative z-10 pt-8 pb-20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            motion.div,
-            {
-              initial: { opacity: 0, y: -24 },
-              animate: { opacity: 1, y: 0 },
-              className: "text-center mb-10",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs uppercase tracking-[0.25em] text-slate-500 mb-2", children: "Solar System Navigator" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "h1",
-                  {
-                    className: "font-display text-4xl md:text-6xl font-black",
-                    style: {
-                      background: "linear-gradient(135deg, #00e5ff 0%, #6c63ff 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      textShadow: "none",
-                      filter: "drop-shadow(0 0 20px rgba(0,229,255,0.4))"
-                    },
-                    children: "EXPLORE PLANETS"
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "Select a world to begin your journey" })
-              ]
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              className: "lg:hidden flex gap-2 overflow-x-auto pb-3 mb-6 snap-x snap-mandatory scrollbar-hide",
-              "data-ocid": "explore.planet_list_mobile",
-              children: PLANETS.map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: () => selectPlanet(i),
-                  "data-ocid": `explore.planet_tab.${i + 1}`,
-                  className: `flex-shrink-0 snap-start px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 whitespace-nowrap ${i === selectedIndex ? "text-space-black font-bold" : "text-slate-400 border border-white/10 hover:text-white hover:border-cyan-500/30"}`,
-                  style: i === selectedIndex ? {
-                    background: "linear-gradient(135deg, #00e5ff 0%, #6c63ff 100%)",
-                    boxShadow: "0 0 16px rgba(0,229,255,0.4)"
-                  } : {},
-                  children: p.name
-                },
-                p.id
-              ))
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col lg:flex-row gap-6", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen relative overflow-x-hidden", "data-ocid": "explore.page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "fixed inset-0 pointer-events-none transition-all duration-700",
+        style: {
+          background: `radial-gradient(ellipse at 60% 30%, ${planet.tintColor} 0%, transparent 70%)`,
+          zIndex: 1
+        },
+        "aria-hidden": "true"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative z-10 pt-8 pb-20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: -24 },
+          animate: { opacity: 1, y: 0 },
+          className: "text-center mb-8",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs uppercase tracking-[0.25em] text-slate-500 mb-2", children: "Solar System Navigator" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
-              motion.aside,
+              "h1",
               {
-                initial: { opacity: 0, x: -30 },
-                animate: { opacity: 1, x: 0 },
-                transition: { delay: 0.1 },
-                className: "hidden lg:block lg:w-56 flex-shrink-0",
-                "data-ocid": "explore.planet_list",
-                children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "glass-card p-4 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-4 px-1", children: "Solar System" }),
-                  PLANETS.map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                className: "font-display text-4xl md:text-6xl font-black",
+                style: {
+                  background: "linear-gradient(135deg, #00e5ff 0%, #6c63ff 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  textShadow: "none",
+                  filter: "drop-shadow(0 0 20px rgba(0,229,255,0.4))"
+                },
+                children: "EXPLORE"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "Navigate the cosmos and stay updated" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center mb-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "flex gap-1 p-1 rounded-xl",
+          style: {
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)"
+          },
+          children: [
+            { id: "solar-system", label: "🪐 Solar System" },
+            { id: "latest-news", label: "📰 Latest News" }
+          ].map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              onClick: () => setActiveTab(tab.id),
+              className: "px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300",
+              style: activeTab === tab.id ? {
+                background: "linear-gradient(135deg, #00e5ff 0%, #6c63ff 100%)",
+                color: "#0b0f1a",
+                boxShadow: "0 0 16px rgba(0,229,255,0.3)"
+              } : { color: "#94a3b8" },
+              children: tab.label
+            },
+            tab.id
+          ))
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: activeTab === "solar-system" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: 16 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0, y: -16 },
+          transition: { duration: 0.3 },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:hidden flex gap-2 overflow-x-auto pb-3 mb-6 snap-x snap-mandatory scrollbar-hide", children: PLANETS.map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => selectPlanet(i),
+                className: `flex-shrink-0 snap-start px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 whitespace-nowrap ${i === selectedIndex ? "text-space-black font-bold" : "text-slate-400 border border-white/10 hover:text-white"}`,
+                style: i === selectedIndex ? {
+                  background: "linear-gradient(135deg, #00e5ff 0%, #6c63ff 100%)",
+                  boxShadow: "0 0 16px rgba(0,229,255,0.4)"
+                } : {},
+                children: p.name
+              },
+              p.id
+            )) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col lg:flex-row gap-6", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.aside,
+                {
+                  initial: { opacity: 0, x: -30 },
+                  animate: { opacity: 1, x: 0 },
+                  className: "hidden lg:block lg:w-56 flex-shrink-0",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "glass-card p-4 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-4 px-1", children: "Solar System" }),
+                    PLANETS.map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => selectPlanet(i),
+                        className: `w-full text-left px-3 py-3 rounded-xl mb-1 transition-all duration-300 group ${i === selectedIndex ? "bg-cyan-500/10 border border-cyan-500/30" : "hover:bg-white/5 border border-transparent"}`,
+                        children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-sm font-bold font-display ${i === selectedIndex ? "text-neon-cyan" : "text-slate-300 group-hover:text-white"}`, children: p.name }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-slate-500 mt-0.5", children: PLANET_SUBTITLES[p.id] })
+                        ]
+                      },
+                      p.id
+                    ))
+                  ] })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  motion.div,
+                  {
+                    initial: { opacity: 0, y: 16 },
+                    animate: { opacity: 1, y: 0 },
+                    exit: { opacity: 0, y: -16 },
+                    transition: { duration: 0.35 },
+                    className: "glass-card p-6 md:p-10",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row gap-8 lg:gap-12 items-center", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-shrink-0 relative flex items-center justify-center", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "div",
+                          {
+                            className: "absolute inset-0 rounded-full pointer-events-none",
+                            style: {
+                              background: `radial-gradient(circle, ${planet.tintColor.replace("0.08", "0.3")} 0%, transparent 70%)`,
+                              transform: "scale(1.4)"
+                            }
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          motion.div,
+                          {
+                            animate: { rotate: 360 },
+                            transition: { duration: 40, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
+                            className: "w-44 h-44 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden relative z-10",
+                            style: {
+                              boxShadow: `0 0 40px ${planet.tintColor.replace("0.08", "0.5")}, 0 0 80px ${planet.tintColor.replace("0.08", "0.2")}, inset 0 0 40px rgba(0,0,0,0.4)`
+                            },
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                              "img",
+                              {
+                                src: planet.image,
+                                alt: `${planet.name} - real space photograph`,
+                                className: "w-full h-full object-cover",
+                                onError: (e) => {
+                                  e.target.style.display = "none";
+                                }
+                              }
+                            )
+                          }
+                        )
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-1", children: planet.id === "moon" ? "Natural Satellite" : `Planet ${selectedIndex + 1} of ${PLANETS.length - 1}` }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "h2",
+                          {
+                            className: "font-display text-5xl md:text-7xl font-black text-white mb-2 leading-none",
+                            style: { textShadow: "0 0 40px rgba(255,255,255,0.25)" },
+                            children: planet.name
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "div",
+                          {
+                            className: "inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 font-display",
+                            style: {
+                              background: "rgba(0,229,255,0.12)",
+                              border: "1px solid rgba(0,229,255,0.3)",
+                              color: "#00e5ff",
+                              boxShadow: "0 0 12px rgba(0,229,255,0.15)"
+                            },
+                            children: planet.keyFeature
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-300 leading-relaxed mb-6 text-base", children: planet.description }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6", children: [
+                          { label: "Distance", value: planet.distanceFromSun },
+                          { label: "Diameter", value: planet.diameter },
+                          { label: "Moons", value: String(planet.moons) },
+                          { label: "Orbital Period", value: planet.orbitalPeriod },
+                          { label: "Temperature", value: planet.temperature },
+                          { label: "Gravity", value: `${planet.gravity} m/s²` }
+                        ].map((stat) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
+                          {
+                            className: "bg-white/[0.04] rounded-lg p-3 border border-white/[0.07] hover:border-cyan-500/20 transition-colors duration-200",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] uppercase tracking-widest text-slate-500 mb-1", children: stat.label }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-white truncate", children: stat.value })
+                            ]
+                          },
+                          stat.label
+                        )) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          "div",
+                          {
+                            className: "glass-card p-4 mb-6",
+                            style: { borderLeft: "2px solid #00e5ff", background: "rgba(0,229,255,0.04)" },
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] uppercase tracking-widest text-neon-cyan mb-1 font-semibold", children: "💡 Did You Know?" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-300 text-sm leading-relaxed", children: planet.didYouKnow })
+                            ]
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            Link,
+                            {
+                              to: "/planet/$name",
+                              params: { name: planet.slug },
+                              className: "cta-primary px-6 py-2.5 rounded-lg font-display font-bold text-sm",
+                              "data-ocid": "explore.view_detail_button",
+                              children: "View in Detail"
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            Link,
+                            {
+                              to: "/simulation",
+                              className: "cta-secondary px-5 py-2.5 rounded-lg text-sm",
+                              "data-ocid": "explore.simulate_astronaut_button",
+                              children: "Simulate as Astronaut"
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            Link,
+                            {
+                              to: "/lab",
+                              className: "px-5 py-2.5 rounded-lg text-sm font-semibold text-neon-purple border border-purple-500/30 hover:bg-purple-500/10 transition-all duration-300",
+                              "data-ocid": "explore.test_lab_button",
+                              children: "Test in Lab"
+                            }
+                          )
+                        ] })
+                      ] })
+                    ] })
+                  },
+                  planet.id
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mt-4 gap-3", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     "button",
                     {
                       type: "button",
-                      onClick: () => selectPlanet(i),
-                      "data-ocid": `explore.planet_tab.${i + 1}`,
-                      className: `w-full text-left px-3 py-3 rounded-xl mb-1 transition-all duration-300 group ${i === selectedIndex ? "bg-cyan-500/10 border border-cyan-500/30" : "hover:bg-white/5 border border-transparent"}`,
-                      style: i === selectedIndex ? { boxShadow: "0 0 16px rgba(0,229,255,0.15)" } : {},
+                      onClick: goPrev,
+                      className: "flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 border border-white/10 hover:border-cyan-500/30 hover:text-neon-cyan transition-all duration-300 hover:bg-cyan-500/5",
+                      "data-ocid": "explore.prev_planet_button",
                       children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          "p",
-                          {
-                            className: `text-sm font-bold font-display transition-colors duration-300 ${i === selectedIndex ? "text-neon-cyan" : "text-slate-300 group-hover:text-white"}`,
-                            children: p.name
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-slate-500 mt-0.5", children: PLANET_SUBTITLES[p.id] })
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "←" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: PLANETS[(selectedIndex - 1 + PLANETS.length) % PLANETS.length].name })
                       ]
-                    },
-                    p.id
-                  ))
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: goNext,
+                      className: "flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 border border-white/10 hover:border-cyan-500/30 hover:text-neon-cyan transition-all duration-300 hover:bg-cyan-500/5",
+                      "data-ocid": "explore.next_planet_button",
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: PLANETS[(selectedIndex + 1) % PLANETS.length].name }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "→" })
+                      ]
+                    }
+                  )
                 ] })
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                motion.div,
-                {
-                  initial: { opacity: 0, y: 16 },
-                  animate: { opacity: 1, y: 0 },
-                  exit: { opacity: 0, y: -16 },
-                  transition: { duration: 0.35 },
-                  className: "glass-card p-6 md:p-10",
-                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row gap-8 lg:gap-12 items-center", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-shrink-0 relative flex items-center justify-center", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "div",
-                        {
-                          className: "absolute inset-0 rounded-full pointer-events-none",
-                          style: {
-                            background: `radial-gradient(circle, ${planet.tintColor.replace("0.08", "0.3")} 0%, transparent 70%)`,
-                            transform: "scale(1.4)"
-                          },
-                          "aria-hidden": "true"
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        motion.div,
-                        {
-                          animate: { rotate: 360 },
-                          transition: {
-                            duration: 40,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: "linear"
-                          },
-                          className: "w-44 h-44 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden relative z-10",
-                          style: {
-                            boxShadow: `0 0 40px ${planet.tintColor.replace("0.08", "0.5")}, 0 0 80px ${planet.tintColor.replace("0.08", "0.2")}, inset 0 0 40px rgba(0,0,0,0.4)`
-                          },
-                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                            "img",
-                            {
-                              src: planet.image,
-                              alt: `${planet.name} - real space photograph`,
-                              className: "w-full h-full object-cover",
-                              onError: (e) => {
-                                e.target.style.display = "none";
-                              }
-                            }
-                          )
-                        }
-                      )
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 min-w-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                      motion.div,
-                      {
-                        initial: { opacity: 0, x: 20 },
-                        animate: { opacity: 1, x: 0 },
-                        transition: { delay: 0.1 },
-                        children: [
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-1", children: planet.id === "moon" ? "Natural Satellite" : `Planet ${selectedIndex + 1} of ${PLANETS.length - 1}` }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx(
-                            "h2",
-                            {
-                              className: "font-display text-5xl md:text-7xl font-black text-white mb-2 leading-none",
-                              style: {
-                                textShadow: "0 0 40px rgba(255,255,255,0.25)"
-                              },
-                              children: planet.name
-                            }
-                          ),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx(
-                            "div",
-                            {
-                              className: "inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 font-display",
-                              style: {
-                                background: "rgba(0,229,255,0.12)",
-                                border: "1px solid rgba(0,229,255,0.3)",
-                                color: "#00e5ff",
-                                boxShadow: "0 0 12px rgba(0,229,255,0.15)"
-                              },
-                              children: planet.keyFeature
-                            }
-                          ),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-300 leading-relaxed mb-6 text-base", children: planet.description }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6", children: [
-                            {
-                              label: "Distance",
-                              value: planet.distanceFromSun
-                            },
-                            { label: "Diameter", value: planet.diameter },
-                            {
-                              label: "Moons",
-                              value: String(planet.moons)
-                            },
-                            {
-                              label: "Orbital Period",
-                              value: planet.orbitalPeriod
-                            },
-                            {
-                              label: "Temperature",
-                              value: planet.temperature
-                            },
-                            {
-                              label: "Gravity",
-                              value: `${planet.gravity} m/s²`
-                            }
-                          ].map((stat) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                            "div",
-                            {
-                              className: "bg-white/[0.04] rounded-lg p-3 border border-white/[0.07] hover:border-cyan-500/20 transition-colors duration-200",
-                              children: [
-                                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] uppercase tracking-widest text-slate-500 mb-1", children: stat.label }),
-                                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-white truncate", children: stat.value })
-                              ]
-                            },
-                            stat.label
-                          )) }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                            "div",
-                            {
-                              className: "glass-card p-4 mb-6",
-                              style: {
-                                borderLeft: "2px solid #00e5ff",
-                                background: "rgba(0,229,255,0.04)"
-                              },
-                              children: [
-                                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] uppercase tracking-widest text-neon-cyan mb-1 font-semibold", children: "💡 Did You Know?" }),
-                                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-300 text-sm leading-relaxed", children: planet.didYouKnow })
-                              ]
-                            }
-                          ),
-                          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3", children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(
-                              Link,
-                              {
-                                to: "/planet/$name",
-                                params: { name: planet.slug },
-                                className: "cta-primary px-6 py-2.5 rounded-lg font-display font-bold text-sm",
-                                "data-ocid": "explore.view_detail_button",
-                                children: "View in Detail"
-                              }
-                            ),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(
-                              Link,
-                              {
-                                to: "/simulation",
-                                className: "cta-secondary px-5 py-2.5 rounded-lg text-sm",
-                                "data-ocid": "explore.simulate_astronaut_button",
-                                children: "Simulate as Astronaut"
-                              }
-                            ),
-                            /* @__PURE__ */ jsxRuntimeExports.jsx(
-                              Link,
-                              {
-                                to: "/lab",
-                                className: "px-5 py-2.5 rounded-lg text-sm font-semibold text-neon-purple border border-purple-500/30 hover:bg-purple-500/10 transition-all duration-300",
-                                "data-ocid": "explore.test_lab_button",
-                                children: "Test in Lab"
-                              }
-                            )
-                          ] })
-                        ]
-                      }
-                    ) })
-                  ] })
-                },
-                planet.id
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mt-4 gap-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "button",
-                  {
-                    type: "button",
-                    onClick: goPrev,
-                    className: "flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 border border-white/10 hover:border-cyan-500/30 hover:text-neon-cyan transition-all duration-300 hover:bg-cyan-500/5",
-                    "data-ocid": "explore.prev_planet_button",
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "←" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: PLANETS[(selectedIndex - 1 + PLANETS.length) % PLANETS.length].name })
-                    ]
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "button",
-                  {
-                    type: "button",
-                    onClick: goNext,
-                    className: "flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 border border-white/10 hover:border-cyan-500/30 hover:text-neon-cyan transition-all duration-300 hover:bg-cyan-500/5",
-                    "data-ocid": "explore.next_planet_button",
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: PLANETS[(selectedIndex + 1) % PLANETS.length].name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "→" })
-                    ]
-                  }
-                )
               ] })
             ] })
-          ] })
-        ] }) })
-      ]
-    }
-  );
+          ]
+        },
+        "solar-system"
+      ) : (
+        /* Latest News Tab */
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          motion.div,
+          {
+            initial: { opacity: 0, y: 16 },
+            animate: { opacity: 1, y: 0 },
+            exit: { opacity: 0, y: -16 },
+            transition: { duration: 0.3 },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-6", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-black text-white mb-1", children: "Latest Space News" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm", children: "Live updates from SpaceFlight News API" })
+              ] }),
+              newsLoading && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center items-center py-20", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "w-10 h-10 rounded-full border-2 animate-spin",
+                  style: { borderColor: "rgba(0,229,255,0.2)", borderTopColor: "#00e5ff" }
+                }
+              ) }),
+              newsError && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-20 text-slate-400", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Failed to load news. Please try again later." }) }),
+              !newsLoading && !newsError && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", children: news.map((article) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                motion.a,
+                {
+                  href: article.url,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  initial: { opacity: 0, y: 16 },
+                  animate: { opacity: 1, y: 0 },
+                  className: "glass-card overflow-hidden group hover:border-cyan-500/30 transition-all duration-300",
+                  style: { textDecoration: "none" },
+                  children: [
+                    article.image_url && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-48 overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "img",
+                      {
+                        src: article.image_url,
+                        alt: article.title,
+                        className: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500",
+                        onError: (e) => {
+                          e.target.style.display = "none";
+                        }
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "span",
+                          {
+                            className: "text-[10px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded-full",
+                            style: {
+                              background: "rgba(0,229,255,0.1)",
+                              border: "1px solid rgba(0,229,255,0.2)",
+                              color: "#00e5ff"
+                            },
+                            children: article.news_site
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] text-slate-500", children: new Date(article.published_at).toLocaleDateString("en-IN") })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-white font-bold text-sm leading-snug mb-2 group-hover:text-neon-cyan transition-colors duration-300 line-clamp-2", children: article.title }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-xs leading-relaxed line-clamp-3", children: article.summary }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex items-center gap-1 text-neon-cyan text-xs font-semibold", children: [
+                        "Read more ",
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "→" })
+                      ] })
+                    ] })
+                  ]
+                },
+                article.id
+              )) })
+            ]
+          },
+          "latest-news"
+        )
+      ) })
+    ] }) })
+  ] });
 }
 const EARTH_IMG = "/assets/generated/earth-hero.dim_1200x1200.jpg";
 const MOON_IMG = "/assets/generated/moon-hero.dim_600x600.jpg";
@@ -39052,10 +39107,10 @@ const FEATURES = [
   },
   {
     icon: Rocket,
-    title: "Become an Astronaut",
-    description: "Simulate your body in space and meet the heroes who explored the cosmos.",
-    to: "/astronaut",
-    cta: "Simulate Now",
+    title: "Meet the Astronauts",
+    description: "Explore the lives and missions of legendary astronauts who shaped space exploration.",
+    to: "/astronauts",
+    cta: "View Astronauts",
     color: "#6C63FF",
     ocid: "home.astronaut_card",
     gradient: "rgba(108,99,255,0.12)",
@@ -39171,13 +39226,13 @@ function HomePage() {
                   initial: { opacity: 0, y: 20 },
                   animate: { opacity: 1, y: 0 },
                   transition: { duration: 0.6, delay: 0.34 },
-                  className: "flex flex-col sm:flex-row items-center lg:items-start gap-4 mb-10",
+                  className: "flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10",
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
                       Link,
                       {
                         to: "/explore",
-                        className: "cta-primary px-9 py-3.5 text-sm",
+                        className: "cta-primary px-9 py-3.5 text-sm w-full sm:w-auto text-center",
                         "data-ocid": "home.start_exploration_button",
                         children: "Start Exploration"
                       }
@@ -39186,7 +39241,7 @@ function HomePage() {
                       Link,
                       {
                         to: "/lab",
-                        className: "cta-secondary px-9 py-3.5 text-sm",
+                        className: "cta-secondary px-9 py-3.5 text-sm w-full sm:w-auto text-center",
                         "data-ocid": "home.try_lab_button",
                         children: "Try Interactive Lab"
                       }
@@ -39256,39 +39311,28 @@ function HomePage() {
                       }
                     }
                   ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "div",
                     {
-                      className: "relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[440px] lg:h-[440px] rounded-full overflow-hidden",
+                      className: "relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden",
                       style: {
-                        boxShadow: "0 0 80px rgba(0,100,255,0.45), 0 0 160px rgba(0,100,255,0.2), 0 0 260px rgba(0,229,255,0.1)"
+                        boxShadow: "0 0 60px rgba(0,100,220,0.4), 0 0 120px rgba(0,229,255,0.15)"
                       },
-                      children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          motion.img,
-                          {
-                            src: EARTH_IMG,
-                            alt: "Earth from Apollo 17",
-                            className: "w-full h-full object-cover",
-                            animate: { rotate: 360 },
-                            transition: {
-                              duration: 30,
-                              repeat: Number.POSITIVE_INFINITY,
-                              ease: "linear"
-                            },
-                            style: { willChange: "transform" }
-                          }
-                        ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          "div",
-                          {
-                            className: "absolute inset-0 rounded-full pointer-events-none",
-                            style: {
-                              background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.04) 0%, transparent 50%), radial-gradient(circle, transparent 55%, rgba(0,40,120,0.55) 80%, rgba(0,10,40,0.8) 100%)"
-                            }
-                          }
-                        )
-                      ]
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        motion.img,
+                        {
+                          src: EARTH_IMG,
+                          alt: "Earth",
+                          className: "w-full h-full object-cover rounded-full",
+                          animate: { rotate: 360 },
+                          transition: {
+                            duration: 30,
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: "linear"
+                          },
+                          style: { willChange: "transform" }
+                        }
+                      )
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -40869,9 +40913,9 @@ function InteractiveLabPage() {
                 {
                   type: "button",
                   className: "cta-secondary text-sm",
-                  onClick: () => navigate({ to: "/astronaut" }),
+                  onClick: () => navigate({ to: "/astronauts" }),
                   "data-ocid": "lab.simulate_yourself_button",
-                  children: "🧑‍🚀 Simulate Yourself"
+                  children: "🧑‍🚀 View Astronauts"
                 }
               )
             ] })
@@ -41048,84 +41092,87 @@ function MissionsPage() {
   const fuelLabel = getFuelLabel(fuelLevel);
   const destObj = DESTINATIONS.find((d) => d.id === selectedDest);
   const stats = selectedDest ? getMissionStats(selectedDest, fuelLevel) : null;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
       "data-ocid": "missions.page",
       className: "min-h-screen bg-space-deep px-4 sm:px-6 lg:px-8 py-16",
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          motion.div,
-          {
-            initial: { opacity: 0, y: -20 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.5 },
-            className: "text-center mb-12",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-[0.25em] text-neon-cyan mb-3", children: "Mission Control" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "h1",
-                {
-                  className: "text-glow-cyan text-4xl sm:text-5xl lg:text-6xl font-bold mb-4",
-                  style: { fontFamily: "Orbitron, sans-serif" },
-                  children: "Mission Builder"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-lg max-w-xl mx-auto", children: "Build your own space mission and see if you have what it takes." })
-            ]
-          }
-        ),
-        step !== "result" && /* @__PURE__ */ jsxRuntimeExports.jsx(StepIndicator, { current: step }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
-          step === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            StepOne,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(LiveLaunches, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            motion.div,
             {
-              selected: selectedRocket,
-              onSelect: setSelectedRocket,
-              onNext: () => setStep(2)
-            },
-            "step1"
+              initial: { opacity: 0, y: -20 },
+              animate: { opacity: 1, y: 0 },
+              transition: { duration: 0.5 },
+              className: "text-center mb-12",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-[0.25em] text-neon-cyan mb-3", children: "Mission Control" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "h1",
+                  {
+                    className: "text-glow-cyan text-4xl sm:text-5xl lg:text-6xl font-bold mb-4",
+                    style: { fontFamily: "Orbitron, sans-serif" },
+                    children: "Mission Builder"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-lg max-w-xl mx-auto", children: "Build your own space mission and see if you have what it takes." })
+              ]
+            }
           ),
-          step === 2 && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            StepTwo,
-            {
-              selected: selectedDest,
-              onSelect: setSelectedDest,
-              onNext: () => setStep(3),
-              onBack: () => setStep(1)
-            },
-            "step2"
-          ),
-          step === 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            StepThree,
-            {
-              fuelLevel,
-              fuelLabel,
-              onFuelChange: setFuelLevel,
-              onLaunch: handleLaunch,
-              onBack: () => setStep(2)
-            },
-            "step3"
-          ),
-          step === "result" && missionResult && selectedDest && selectedRocket && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            ResultScreen,
-            {
-              result: missionResult,
-              destination: destObj,
-              rocket: selectedRocket,
-              fuelLevel,
-              stats,
-              failReason: getFailReason(
-                selectedRocket,
-                selectedDest,
-                fuelLevel
-              ),
-              onReset: handleReset
-            },
-            "result"
-          )
+          step !== "result" && /* @__PURE__ */ jsxRuntimeExports.jsx(StepIndicator, { current: step }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
+            step === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+              StepOne,
+              {
+                selected: selectedRocket,
+                onSelect: setSelectedRocket,
+                onNext: () => setStep(2)
+              },
+              "step1"
+            ),
+            step === 2 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+              StepTwo,
+              {
+                selected: selectedDest,
+                onSelect: setSelectedDest,
+                onNext: () => setStep(3),
+                onBack: () => setStep(1)
+              },
+              "step2"
+            ),
+            step === 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+              StepThree,
+              {
+                fuelLevel,
+                fuelLabel,
+                onFuelChange: setFuelLevel,
+                onLaunch: handleLaunch,
+                onBack: () => setStep(2)
+              },
+              "step3"
+            ),
+            step === "result" && missionResult && selectedDest && selectedRocket && /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ResultScreen,
+              {
+                result: missionResult,
+                destination: destObj,
+                rocket: selectedRocket,
+                fuelLevel,
+                stats,
+                failReason: getFailReason(
+                  selectedRocket,
+                  selectedDest,
+                  fuelLevel
+                ),
+                onReset: handleReset
+              },
+              "result"
+            )
+          ] })
         ] })
-      ] })
+      ]
     }
   );
 }
@@ -41748,6 +41795,82 @@ function StatCard({
       ]
     }
   );
+}
+function LiveLaunches() {
+  const [launches, setLaunches] = reactExports.useState([]);
+  const [loading, setLoading] = reactExports.useState(true);
+  const [error, setError] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    fetch("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=6&format=json").then((res) => res.json()).then((data) => {
+      setLaunches(data.results);
+      setLoading(false);
+    }).catch(() => {
+      setError(true);
+      setLoading(false);
+    });
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { color: "white", fontSize: "20px" }, children: "TEST" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mb-20", "data-ocid": "missions.live_launches", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-neon-cyan mb-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2 h-2 rounded-full bg-green-400 animate-pulse" }),
+          "Live Data"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-3xl font-bold text-white", style: { textShadow: "0 0 30px rgba(0,229,255,0.2)" }, children: "Upcoming Launches" })
+      ] }),
+      loading && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-slate-400 py-10", children: "Loading launches..." }),
+      error && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-red-400 py-10", children: "Failed to load launches." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5", children: launches.map((launch) => {
+        var _a2, _b2, _c2, _d2;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          motion.div,
+          {
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            className: "rounded-2xl p-5 flex flex-col gap-3",
+            style: {
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(0,229,255,0.12)",
+              backdropFilter: "blur(12px)"
+            },
+            children: [
+              launch.image && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "img",
+                {
+                  src: launch.image,
+                  alt: launch.name,
+                  className: "w-full h-36 object-cover rounded-xl"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-neon-cyan font-semibold uppercase tracking-widest mb-1", children: (_a2 = launch.launch_service_provider) == null ? void 0 : _a2.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-white font-bold text-sm leading-snug mb-1", children: launch.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-slate-400", children: [
+                  "🕐 ",
+                  launch.net ? new Date(launch.net).toLocaleString() : "TBD"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mt-1", children: (_c2 = (_b2 = launch.pad) == null ? void 0 : _b2.location) == null ? void 0 : _c2.name })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "span",
+                {
+                  className: "text-xs font-semibold px-2 py-1 rounded-full w-fit",
+                  style: {
+                    background: "rgba(0,229,255,0.1)",
+                    color: "#00E5FF",
+                    border: "1px solid rgba(0,229,255,0.2)"
+                  },
+                  children: (_d2 = launch.status) == null ? void 0 : _d2.name
+                }
+              )
+            ]
+          },
+          launch.id
+        );
+      }) })
+    ] })
+  ] });
 }
 function PlanetDetailPage() {
   const { name } = useParams({ strict: false });
@@ -42772,12 +42895,12 @@ const agenciesRoute = createRoute({
 });
 const astronautRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/astronaut",
+  path: "/astronauts",
   component: AstronautsPage
 });
 const astronautProfileRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/astronaut/$slug",
+  path: "/astronauts/$slug",
   component: AstronautProfilePage
 });
 const labRoute = createRoute({

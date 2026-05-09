@@ -840,6 +840,9 @@ video {
 .mt-2 {
   margin-top: 0.5rem;
 }
+.mt-3 {
+  margin-top: 0.75rem;
+}
 .mt-4 {
   margin-top: 1rem;
 }
@@ -860,6 +863,12 @@ video {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+}
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 .line-clamp-3 {
   overflow: hidden;
@@ -984,6 +993,9 @@ video {
 }
 .h-32 {
   height: 8rem;
+}
+.h-36 {
+  height: 9rem;
 }
 .h-4 {
   height: 1rem;
@@ -1707,6 +1719,10 @@ video {
 .bg-foreground {
   background-color: oklch(var(--foreground));
 }
+.bg-green-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(74 222 128 / var(--tw-bg-opacity, 1));
+}
 .bg-muted {
   --tw-bg-opacity: 1;
   background-color: oklch(var(--muted) / var(--tw-bg-opacity, 1));
@@ -2274,9 +2290,6 @@ video {
 }
 .underline {
   text-decoration-line: underline;
-}
-.underline-offset-2 {
-  text-underline-offset: 2px;
 }
 .underline-offset-4 {
   text-underline-offset: 4px;
@@ -3908,8 +3921,8 @@ video {
     height: 5rem;
   }
 
-  .sm\:h-96 {
-    height: 24rem;
+  .sm\:h-80 {
+    height: 20rem;
   }
 
   .sm\:w-20 {
@@ -3920,12 +3933,16 @@ video {
     width: 6rem;
   }
 
-  .sm\:w-96 {
-    width: 24rem;
+  .sm\:w-80 {
+    width: 20rem;
   }
 
   .sm\:w-\[calc\(50\%-2rem\)\] {
     width: calc(50% - 2rem);
+  }
+
+  .sm\:w-auto {
+    width: auto;
   }
 
   .sm\:max-w-lg {
@@ -4198,10 +4215,6 @@ video {
     height: 24rem;
   }
 
-  .lg\:h-\[440px\] {
-    height: 440px;
-  }
-
   .lg\:w-56 {
     width: 14rem;
   }
@@ -4218,12 +4231,12 @@ video {
     width: 24rem;
   }
 
-  .lg\:w-\[440px\] {
-    width: 440px;
-  }
-
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:grid-cols-4 {
@@ -4238,8 +4251,8 @@ video {
     flex-direction: row;
   }
 
-  .lg\:items-start {
-    align-items: flex-start;
+  .lg\:justify-start {
+    justify-content: flex-start;
   }
 
   .lg\:gap-12 {
