@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type RocketId = "light" | "heavy" | "advanced";
@@ -249,6 +249,7 @@ export default function MissionsPage() {
       data-ocid="missions.page"
       className="min-h-screen bg-space-deep px-4 sm:px-6 lg:px-8 py-16"
     >
+      <LiveLaunches />
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -270,7 +271,7 @@ export default function MissionsPage() {
             Build your own space mission and see if you have what it takes.
           </p>
         </motion.div>
-
+         
         {/* Step Indicators */}
         {step !== "result" && <StepIndicator current={step as 1 | 2 | 3} />}
 
@@ -953,3 +954,89 @@ function StatCard({
     </div>
   );
 }
+// ─── Live Launches Component
+function LiveLaunches() {
+  const [launches, setLaunches] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetch("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=6&format=json")
+      .then((res) => res.json())
+      .then((data) => {
+        setLaunches(data.results);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+  <>
+    <div style={{color: "white", fontSize: "20px"}}>TEST</div>
+    <section className="mb-20" data-ocid="missions.live_launches">
+      <div className="text-center mb-8">
+        <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-neon-cyan mb-3">
+          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          Live Data
+        </span>
+        <h2 className="font-display text-3xl font-bold text-white" style={{ textShadow: "0 0 30px rgba(0,229,255,0.2)" }}>
+          Upcoming Launches
+        </h2>
+      </div>
+
+      {loading && (
+        <div className="text-center text-slate-400 py-10">Loading launches...</div>
+      )}
+      {error && (
+        <div className="text-center text-red-400 py-10">Failed to load launches.</div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {launches.map((launch) => (
+          <motion.div
+            key={launch.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl p-5 flex flex-col gap-3"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(0,229,255,0.12)",
+              backdropFilter: "blur(12px)",
+            }}
+          >
+            {launch.image && (
+              <img
+                src={launch.image}
+                alt={launch.name}
+                className="w-full h-36 object-cover rounded-xl"
+              />
+            )}
+            <div>
+              <p className="text-xs text-neon-cyan font-semibold uppercase tracking-widest mb-1">
+                {launch.launch_service_provider?.name}
+              </p>
+              <h3 className="text-white font-bold text-sm leading-snug mb-1">{launch.name}</h3>
+              <p className="text-xs text-slate-400">
+                🕐 {launch.net ? new Date(launch.net).toLocaleString() : "TBD"}
+              </p>
+              <p className="text-xs text-slate-500 mt-1">{launch.pad?.location?.name}</p>
+            </div>
+            <span
+              className="text-xs font-semibold px-2 py-1 rounded-full w-fit"
+              style={{
+                background: "rgba(0,229,255,0.1)",
+                color: "#00E5FF",
+                border: "1px solid rgba(0,229,255,0.2)",
+              }}
+            >
+              {launch.status?.name}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  </>
+);
