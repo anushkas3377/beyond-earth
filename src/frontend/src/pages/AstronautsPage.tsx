@@ -157,28 +157,37 @@ function LiveAstronautsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    fetch("https://api.open-notify.org/astros.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const people: LiveAstronaut[] = data.people;
-        const enriched = people.map((person) => {
-          const info = ASTRONAUT_PHOTOS[person.name];
-          return {
-            ...person,
-            photo: info?.photo,
-            description: info?.description,
-            wikiUrl: info?.wikiUrl,
-          };
-        });
-        setAstronauts(enriched);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError(true);
-        setLoading(false);
+ useEffect(() => {
+  const fallbackData = Object.entries(ASTRONAUT_PHOTOS).map(([name, info]) => ({
+    name,
+    craft: name.includes("Li") || name.includes("Ye") ? "TIANGONG" : "ISS",
+    photo: info.photo,
+    description: info.description,
+    wikiUrl: info.wikiUrl,
+  }));
+
+  fetch("https://api.open-notify.org/astros.json")
+    .then((res) => res.json())
+    .then((data) => {
+      const people: LiveAstronaut[] = data.people;
+      const enriched = people.map((person) => {
+        const info = ASTRONAUT_PHOTOS[person.name];
+        return {
+          ...person,
+          photo: info?.photo,
+          description: info?.description,
+          wikiUrl: info?.wikiUrl,
+        };
       });
-  }, []);
+      setAstronauts(enriched);
+      setLoading(false);
+    })
+    .catch(() => {
+      setAstronauts(fallbackData);
+      setLoading(false);
+      setError(false);
+    });
+}, []);
 
   return (
     <motion.div

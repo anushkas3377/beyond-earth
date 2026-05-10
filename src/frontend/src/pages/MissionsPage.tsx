@@ -402,11 +402,7 @@ function LiveLaunches() {
               <p className="text-xs text-slate-500 mt-1">{launch.pad?.location?.name}</p>
             </div>
             <div className="flex items-center justify-between">
-            <span
-               className="text-xs font-semibold px-2 py-1 rounded-full w-fit"
-                style={{ background: "rgba(0,229,255,0.1)", color: "#00E5FF", border: "1px solid rgba(0,229,255,0.2)" }}>
-                {launch.status?.name}
-            </span>
+            
               <a
                href={`https://www.google.com/search?q=${encodeURIComponent(launch.name + " space launch")}`}
                target="_blank"
