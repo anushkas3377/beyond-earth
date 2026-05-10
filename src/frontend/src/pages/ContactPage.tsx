@@ -1,3 +1,4 @@
+import { supabase } from "@/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -82,7 +83,7 @@ export default function ContactPage() {
     setErrors((prev) => ({ ...prev, [field]: errs[field] }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -92,10 +93,20 @@ export default function ContactPage() {
       return;
     }
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 1200);
+    const { error } = await supabase
+      .from("contacts")
+      .insert([{ name: form.name, email: form.email, message: form.message }]);
+    setSubmitting(false);
+    if (error) {
+  console.log("SUPABASE ERROR:", error);
+  alert(error.message);
+
+  setGlobalError(true);
+  setTimeout(() => setGlobalError(false), 600);
+} else {
+  console.log("Inserted successfully");
+  setSubmitted(true);
+} 
   }
 
   return (

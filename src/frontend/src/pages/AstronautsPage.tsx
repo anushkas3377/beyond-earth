@@ -1,3 +1,4 @@
+import { supabase } from "@/supabaseClient";
 import { Badge } from "@/components/ui/badge";
 import type { Astronaut } from "@/types/space";
 import { Link } from "@tanstack/react-router";
@@ -157,35 +158,24 @@ function LiveAstronautsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
- useEffect(() => {
-  const fallbackData = Object.entries(ASTRONAUT_PHOTOS).map(([name, info]) => ({
-    name,
-    craft: name.includes("Li") || name.includes("Ye") ? "TIANGONG" : "ISS",
-    photo: info.photo,
-    description: info.description,
-    wikiUrl: info.wikiUrl,
-  }));
-
-  fetch("https://api.open-notify.org/astros.json")
-    .then((res) => res.json())
-    .then((data) => {
-      const people: LiveAstronaut[] = data.people;
-      const enriched = people.map((person) => {
-        const info = ASTRONAUT_PHOTOS[person.name];
-        return {
-          ...person,
-          photo: info?.photo,
-          description: info?.description,
-          wikiUrl: info?.wikiUrl,
-        };
-      });
+    useEffect(() => {
+        supabase
+    .from("astronauts")
+    .select("*")
+    .then(({ data, error }) => {
+      if (error || !data) {
+        setLoading(false);
+        return;
+      }
+      const enriched = data.map((person) => ({
+        name: person.name,
+        craft: person.craft,
+        photo: person.photo,
+        description: person.description,
+        wikiUrl: person.wiki_url,
+      }));
       setAstronauts(enriched);
       setLoading(false);
-    })
-    .catch(() => {
-      setAstronauts(fallbackData);
-      setLoading(false);
-      setError(false);
     });
 }, []);
 
@@ -212,7 +202,7 @@ function LiveAstronautsSection() {
           HUMANS IN SPACE
         </h2>
         <p className="text-slate-400 text-sm">
-          Real-time data from Open Notify API
+          Current ISS Crew — Expedition 74
         </p>
       </div>
 

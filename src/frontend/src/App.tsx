@@ -5,6 +5,8 @@ import AgenciesPage from "@/pages/AgenciesPage";
 import AstronautProfilePage from "@/pages/AstronautProfilePage";
 import AstronautsPage from "@/pages/AstronautsPage";
 import ContactPage from "@/pages/ContactPage";
+import LoginPage from "@/pages/LoginPage";
+import SignupPage from "@/pages/SignupPage";
 import ExplorePage from "@/pages/ExplorePage";
 import HomePage from "@/pages/HomePage";
 import InteractiveLabPage from "@/pages/InteractiveLabPage";
@@ -81,6 +83,16 @@ const aiRoute = createRoute({
   path: "/ai-assistant",
   component: AIAssistantPage,
 });
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/login",
+  component: LoginPage,
+});
+const signupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/signup",
+  component: SignupPage,
+});
 const contactRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/contact",
@@ -101,6 +113,8 @@ const routeTree = rootRoute.addChildren([
   timelineRoute,
   aiRoute,
   contactRoute,
+  loginRoute,
+  signupRoute,
 ]);
 
 const router = createRouter({ routeTree });

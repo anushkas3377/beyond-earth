@@ -1,3 +1,4 @@
+import { supabase } from "@/supabaseClient";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
 
@@ -25,6 +27,20 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+  }
 
   return (
     <header
@@ -39,12 +55,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-2.5 group"
-            data-ocid="navbar.logo_link"
-          >
+          <Link to="/" className="flex items-center gap-2.5 group">
             <img
               src="/assets/logo.png"
               alt="Beyond Earth logo"
@@ -53,36 +64,20 @@ export default function Navbar() {
             />
             <span
               className="hidden sm:block font-display font-bold text-lg tracking-wide"
-              style={{
-                color: "#00E5FF",
-                textShadow: "0 0 12px rgba(0,229,255,0.5)",
-                letterSpacing: "0.06em",
-              }}
+              style={{ color: "#00E5FF", textShadow: "0 0 12px rgba(0,229,255,0.5)", letterSpacing: "0.06em" }}
             >
               Beyond Earth
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav
-            className="hidden lg:flex items-center gap-0.5"
-            data-ocid="navbar.desktop_nav"
-          >
+          <nav className="hidden lg:flex items-center gap-0.5">
             {NAV_LINKS.map((link) => {
-              const isActive =
-                link.to === "/"
-                  ? currentPath === "/"
-                  : currentPath.startsWith(link.to);
+              const isActive = link.to === "/" ? currentPath === "/" : currentPath.startsWith(link.to);
               return (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`nav-link px-3 py-2 text-sm font-medium ${
-                    isActive
-                      ? "active text-neon-cyan"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                  data-ocid={`navbar.${link.label.toLowerCase()}_link`}
+                  className={`nav-link px-3 py-2 text-sm font-medium ${isActive ? "active text-neon-cyan" : "text-slate-400 hover:text-white"}`}
                 >
                   {link.label}
                 </Link>
@@ -90,76 +85,62 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Start Journey CTA */}
-          <div className="hidden lg:block">
-            <Link
-              to="/explore"
-              className="cta-primary px-5 py-2 text-sm"
-              data-ocid="navbar.start_journey_button"
-            >
-              Start Journey
-            </Link>
+          <div className="hidden lg:flex items-center gap-2">
+            {user ? (
+              <>
+                <span className="text-slate-400 text-xs">
+                  👋 {user.user_metadata?.full_name || user.email}
+                </span>
+                <button onClick={handleLogout} className="cta-secondary px-4 py-2 text-sm">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="cta-secondary px-4 py-2 text-sm">Login</Link>
+                <Link to="/signup" className="cta-primary px-4 py-2 text-sm">Sign Up</Link>
+              </>
+            )}
           </div>
 
-          {/* Mobile Toggle */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             type="button"
             className="lg:hidden p-2 rounded-lg transition-colors duration-200"
             style={{ color: mobileOpen ? "#00E5FF" : "#94a3b8" }}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            data-ocid="navbar.mobile_menu_toggle"
           >
-            {mobileOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           className="lg:hidden animate-slide-down"
-          style={{
-            background: "rgba(5,7,13,0.97)",
-            backdropFilter: "blur(20px)",
-            borderBottom: "1px solid rgba(0,229,255,0.1)",
-          }}
-          data-ocid="navbar.mobile_menu"
+          style={{ background: "rgba(5,7,13,0.97)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(0,229,255,0.1)" }}
         >
           <nav className="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-1">
             {NAV_LINKS.map((link) => {
-              const isActive =
-                link.to === "/"
-                  ? currentPath === "/"
-                  : currentPath.startsWith(link.to);
+              const isActive = link.to === "/" ? currentPath === "/" : currentPath.startsWith(link.to);
               return (
                 <Link
                   key={link.to}
                   to={link.to}
                   onClick={() => setMobileOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
-                    isActive
-                      ? "text-neon-cyan bg-cyan-500/10 border border-cyan-500/20"
-                      : "text-slate-400 hover:text-white hover:bg-white/5"
-                  }`}
-                  data-ocid={`navbar.mobile_${link.label.toLowerCase()}_link`}
+                  className={`px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${isActive ? "text-neon-cyan bg-cyan-500/10 border border-cyan-500/20" : "text-slate-400 hover:text-white hover:bg-white/5"}`}
                 >
                   {link.label}
                 </Link>
               );
             })}
-            <Link
-              to="/explore"
-              onClick={() => setMobileOpen(false)}
-              className="cta-primary mt-4 py-3 text-center text-sm"
-              data-ocid="navbar.mobile_start_journey_button"
-            >
-              Start Journey
-            </Link>
+            {user ? (
+              <button onClick={handleLogout} className="cta-secondary mt-4 py-3 text-center text-sm">Logout</button>
+            ) : (
+              <>
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="cta-secondary mt-4 py-3 text-center text-sm">Login</Link>
+                <Link to="/signup" onClick={() => setMobileOpen(false)} className="cta-primary mt-2 py-3 text-center text-sm">Sign Up</Link>
+              </>
+            )}
           </nav>
         </div>
       )}
