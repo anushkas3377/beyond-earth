@@ -1,3 +1,4 @@
+import ProfilePage from "@/pages/ProfilePage";
 import Layout from "@/components/Layout";
 import AIAssistantPage from "@/pages/AIAssistantPage";
 import AboutPage from "@/pages/AboutPage";
@@ -98,6 +99,11 @@ const contactRoute = createRoute({
   path: "/contact",
   component: ContactPage,
 });
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/profile",
+  component: ProfilePage,
+});
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -115,6 +121,7 @@ const routeTree = rootRoute.addChildren([
   contactRoute,
   loginRoute,
   signupRoute,
+  profileRoute,
 ]);
 
 const router = createRouter({ routeTree });

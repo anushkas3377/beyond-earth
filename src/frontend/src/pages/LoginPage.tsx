@@ -3,7 +3,7 @@ import { supabase } from "@/supabaseClient";
 import { useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
-export default function LoginPage() {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -86,3 +86,4 @@ export default function LoginPage() {
     </div>
   );
 }
+export default LoginPage;
