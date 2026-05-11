@@ -88,9 +88,9 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-2">
             {user ? (
               <>
-                <span className="text-slate-400 text-xs">
+                <Link to="/profile" className="text-slate-400 text-xs hover:text-neon-cyan transition-colors duration-200">
                   👋 {user.user_metadata?.full_name || user.email}
-                </span>
+                  </Link>
                 <button onClick={handleLogout} className="cta-secondary px-4 py-2 text-sm">
                   Logout
                 </button>
