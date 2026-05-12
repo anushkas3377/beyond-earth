@@ -310,7 +310,7 @@ export default function PlanetDetailPage() {
             className="flex flex-wrap gap-3 mb-12"
           >
             <Link
-              to="/astronaut"
+              to="/simulation"
               className="cta-primary px-6 py-3 rounded-xl font-display font-bold text-sm"
               data-ocid="planet_detail.simulate_button"
             >
