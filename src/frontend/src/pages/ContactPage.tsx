@@ -171,6 +171,9 @@ export default function ContactPage() {
             );
           })}
         </motion.div>
+         <p className="text-center text-slate-500 text-xs tracking-widest uppercase mb-10 -mt-6">
+             — Launching on these platforms soon —
+        </p>
 
         {/* Form / Success */}
         <AnimatePresence mode="wait">

@@ -489,7 +489,7 @@ export default function ExplorePage() {
                                 className="cta-secondary px-5 py-2.5 rounded-lg text-sm"
                                 data-ocid="explore.simulate_astronaut_button"
                               >
-                                Simulate as Astronaut
+                                What if Earth disappeared?
                               </Link>
                               <Link
                                 to="/lab"

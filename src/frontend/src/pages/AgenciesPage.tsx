@@ -50,7 +50,7 @@ const AGENCIES: Agency[] = [
       "The European Space Agency coordinates Europe's space activities, operating Earth observation satellites, deep space probes, and contributing to the International Space Station.",
     website: "https://www.esa.int",
     logoUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/8/80/ESA_logo_simple.svg",
+      "/assets/images/esa.png",
     founded: "1975",
     country: "🇪🇺 Europe",
     missions: ["Rosetta", "Gaia", "Mars Express", "Sentinel Earth Observation"],
@@ -60,9 +60,9 @@ const AGENCIES: Agency[] = [
     name: "Roscosmos",
     description:
       "Russia's space agency with a legacy going back to Sputnik and Yuri Gagarin. Roscosmos has been pivotal in human spaceflight, operating the Soyuz launch vehicles that served as the main crew transport to the ISS.",
-    website: "https://www.roscosmos.ru",
+    website: "https://en.wikipedia.org/wiki/Roscosmos",
     logoUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Roscosmos_logo_ru.svg/640px-Roscosmos_logo_ru.svg.png",
+     "/assets/images/roscosmos.png",
     founded: "1992",
     country: "🇷🇺 Russia",
     missions: ["Sputnik 1", "Vostok 1", "Soyuz", "Progress Cargo"],
@@ -74,7 +74,7 @@ const AGENCIES: Agency[] = [
       "China's rapidly growing space program with lunar exploration, the Tiangong space station, and the Tianwen Mars mission. CNSA has become a major force in global space exploration.",
     website: "http://www.cnsa.gov.cn",
     logoUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/China_National_Space_Administration_logo.svg/640px-China_National_Space_Administration_logo.svg.png",
+      "/assets/images/cnsa.png",
     founded: "1993",
     country: "🇨🇳 China",
     missions: [

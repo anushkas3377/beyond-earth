@@ -76,7 +76,7 @@ export default function SimulationPage() {
             backgroundImage: `url('/assets/generated/hero-earth-space.dim_1600x900.jpg')`,
           }}
         >
-          <div className="absolute inset-0 bg-background/85" />
+          <div className="absolute inset-0 bg-black/75" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
           <motion.div
@@ -87,10 +87,10 @@ export default function SimulationPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-5">
               Simulation
             </p>
-            <h1 className="font-display text-5xl sm:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="font-display text-5xl sm:text-6xl font-bold text-white mb-6 leading-tight">
               If Earth Disappeared
             </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-slate-300 text-lg leading-relaxed max-w-2xl mx-auto">
               What would happen to our solar system if Earth suddenly ceased to
               exist? Let's explore the dramatic chain of events across different
               time scales — from the first terrifying minute to a full year of

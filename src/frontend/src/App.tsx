@@ -1,6 +1,5 @@
 import ProfilePage from "@/pages/ProfilePage";
 import Layout from "@/components/Layout";
-import AIAssistantPage from "@/pages/AIAssistantPage";
 import AboutPage from "@/pages/AboutPage";
 import AgenciesPage from "@/pages/AgenciesPage";
 import AstronautProfilePage from "@/pages/AstronautProfilePage";
@@ -79,11 +78,6 @@ const timelineRoute = createRoute({
   path: "/timeline",
   component: TimelinePage,
 });
-const aiRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/ai-assistant",
-  component: AIAssistantPage,
-});
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/login",
@@ -117,7 +111,6 @@ const routeTree = rootRoute.addChildren([
   labRoute,
   simulationRoute,
   timelineRoute,
-  aiRoute,
   contactRoute,
   loginRoute,
   signupRoute,
