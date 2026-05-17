@@ -2,6 +2,139 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+const HISTORY_ERAS = [
+  {
+    id: "bigbang",
+    emoji: "💥",
+    year: "13.8 Billion Years Ago",
+    title: "The Big Bang",
+    subtitle: "Everything from Nothing",
+    description:
+      "The universe began as an infinitely hot, dense point — smaller than an atom. In a fraction of a second, it expanded faster than light itself. Within 3 minutes, hydrogen and helium formed. This was the birth of space, time, energy, and matter.",
+    facts: ["Temperature: 10³² degrees", "Size: smaller than an atom", "Duration of expansion: 10⁻³² seconds"],
+    bg: "radial-gradient(ellipse at center, #1a0a00 0%, #000000 70%)",
+    glow: "#FF6B00",
+    particleColor: "#FF8C00",
+  },
+  {
+    id: "stars",
+    emoji: "⭐",
+    year: "13 Billion Years Ago",
+    title: "First Stars & Galaxies",
+    subtitle: "Light in the Darkness",
+    description:
+      "Gravity pulled hydrogen clouds together until nuclear fusion ignited — the first stars blazed to life. These massive stars forged carbon, oxygen, iron inside them. When they exploded as supernovas, they scattered these elements across space — the building blocks of life.",
+    facts: ["First stars: 100x larger than our Sun", "Milky Way formed 13.6 billion years ago", "100 billion galaxies exist in observable universe"],
+    bg: "radial-gradient(ellipse at center, #0a0a2e 0%, #000000 70%)",
+    glow: "#FFD700",
+    particleColor: "#FFD700",
+  },
+  {
+    id: "earth",
+    emoji: "🌍",
+    year: "4.5 Billion Years Ago",
+    title: "Earth Is Born",
+    subtitle: "Our Pale Blue Dot",
+    description:
+      "A cloud of gas and dust around our young Sun collapsed and clumped together. Countless collisions formed Earth over millions of years. A Mars-sized object crashed into early Earth — debris from this collision formed our Moon. Slowly, oceans appeared as comets delivered water.",
+    facts: ["Earth formed in ~10-20 million years", "Moon formed from giant impact", "First oceans: 4.4 billion years ago"],
+    bg: "radial-gradient(ellipse at center, #0a1a2e 0%, #000000 70%)",
+    glow: "#00A8FF",
+    particleColor: "#00A8FF",
+  },
+  {
+    id: "life",
+    emoji: "🦠",
+    year: "3.8 Billion Years Ago",
+    title: "First Life Appears",
+    subtitle: "Chemistry Becomes Biology",
+    description:
+      "In deep ocean hydrothermal vents, chemical reactions produced the first self-replicating molecules. Single-celled bacteria appeared — invisible yet revolutionary. For 2 billion years, bacteria ruled Earth. Then cyanobacteria invented photosynthesis, filling the atmosphere with oxygen — forever changing the planet.",
+    facts: ["First life: single-celled bacteria", "Photosynthesis invented 2.7 billion years ago", "Oxygen atmosphere created 'Great Oxidation Event'"],
+    bg: "radial-gradient(ellipse at center, #001a0a 0%, #000000 70%)",
+    glow: "#00FF9C",
+    particleColor: "#00FF9C",
+  },
+  {
+    id: "dinosaurs",
+    emoji: "🦕",
+    year: "230 Million Years Ago",
+    title: "Age of Dinosaurs",
+    subtitle: "Giants Rule the Earth",
+    description:
+      "After the Permian extinction wiped out 96% of species, dinosaurs emerged and dominated for 165 million years. They ranged from chicken-sized raptors to 30-meter giants. Then 66 million years ago, a 10km asteroid struck Mexico — dust blocked sunlight, temperatures plummeted, and 75% of all species vanished.",
+    facts: ["Dinosaurs existed for 165 million years", "Asteroid was 10km wide", "75% of species went extinct"],
+    bg: "radial-gradient(ellipse at center, #1a0a1a 0%, #000000 70%)",
+    glow: "#9B59B6",
+    particleColor: "#9B59B6",
+  },
+  {
+    id: "humans",
+    emoji: "🧬",
+    year: "300,000 Years Ago",
+    title: "Homo Sapiens Emerge",
+    subtitle: "The Thinking Animal",
+    description:
+      "After the dinosaurs, mammals thrived. Primates evolved, then apes, then hominids. Homo sapiens appeared in Africa 300,000 years ago with a unique gift — complex language and abstract thinking. We learned to use fire, create art, bury our dead, and imagine things that don't exist yet. This imagination changed everything.",
+    facts: ["Homo sapiens: 300,000 years old", "Language evolved ~100,000 years ago", "We share 98.7% DNA with chimpanzees"],
+    bg: "radial-gradient(ellipse at center, #1a1000 0%, #000000 70%)",
+    glow: "#FF8C00",
+    particleColor: "#FFA500",
+  },
+  {
+    id: "civilization",
+    emoji: "🏛️",
+    year: "10,000 Years Ago",
+    title: "Civilization Begins",
+    subtitle: "From Nomads to Cities",
+    description:
+      "Humans discovered agriculture — suddenly food could be stored. Villages became cities. In Mesopotamia (modern Iraq), the world's first cities like Uruk appeared. Writing was invented to track grain. Laws were written. Rulers emerged. Trade routes connected distant cultures. The Indus Valley civilization built cities with indoor plumbing 4,000 years ago.",
+    facts: ["Agriculture began 10,000 years ago", "First city: Uruk, 5,000 years ago", "Indus Valley had indoor plumbing 4,000 years ago"],
+    bg: "radial-gradient(ellipse at center, #0a0a1a 0%, #000000 70%)",
+    glow: "#F39C12",
+    particleColor: "#F39C12",
+  },
+  {
+    id: "inventions",
+    emoji: "⚡",
+    year: "Last 5,000 Years",
+    title: "Age of Inventions",
+    subtitle: "Human Genius Unleashed",
+    description:
+      "The wheel, writing, mathematics, the printing press, steam engine, electricity, telephone, antibiotics, computers, internet — each invention built upon the last. The Industrial Revolution transformed human life in 200 years more than the previous 10,000. Today, AI is beginning another transformation we cannot yet fully imagine.",
+    facts: ["Printing press: 1440 AD — democratized knowledge", "Electricity harnessed: 1800s", "Internet connected humanity: 1990s"],
+    bg: "radial-gradient(ellipse at center, #00001a 0%, #000000 70%)",
+    glow: "#00E5FF",
+    particleColor: "#00E5FF",
+  },
+  {
+    id: "religion",
+    emoji: "🕌",
+    year: "Throughout History",
+    title: "Religion & Caste",
+    subtitle: "Making Sense of Existence",
+    description:
+      "Early humans, facing death, disease, and natural disasters, created stories to explain the unknown. Animism — spirits in trees, rivers, animals — was humanity's first religion. This evolved into polytheism, then monotheism. Hinduism (4,000 years), Buddhism (2,500 years), Christianity (2,000 years), Islam (1,400 years) each offered answers to life's deepest questions. The caste system, originally a division of labor, became hereditary and rigid — a complex social structure still debated today.",
+    facts: ["Hinduism is world's oldest living religion", "Caste system originally based on occupation", "2.4 billion people identify as Christian today"],
+    bg: "radial-gradient(ellipse at center, #1a0505 0%, #000000 70%)",
+    glow: "#E74C3C",
+    particleColor: "#E74C3C",
+  },
+  {
+    id: "future",
+    emoji: "🚀",
+    year: "Today & Beyond",
+    title: "The Next Chapter",
+    subtitle: "Where Are We Going?",
+    description:
+      "In 100 years, we went from the first airplane to landing on the Moon. Today we face climate change, AI revolution, and the possibility of becoming a multi-planetary species. Mars colonization, quantum computing, genetic engineering — the next century may be the most transformative in human history. The question is no longer 'can we?' but 'should we, and how?'",
+    facts: ["Mars mission planned for 2030s", "AI may exceed human intelligence this century", "8 billion humans alive today"],
+    bg: "radial-gradient(ellipse at center, #000a1a 0%, #000000 70%)",
+    glow: "#6C63FF",
+    particleColor: "#6C63FF",
+  },
+];
+
 interface TimelineEvent {
   year: string;
   title: string;
@@ -171,6 +304,19 @@ const CATEGORY_STYLES: Record<
 export default function TimelinePage() {
   return (
     <div className="min-h-screen" data-ocid="timeline.page">
+
+  {/* 🌌 NEW — History of Everything */}
+  <HistoryOfEverything />
+
+  {/* Divider */}
+  <div className="py-16 text-center"
+    style={{ background: "radial-gradient(ellipse at center, rgba(0,229,255,0.05) 0%, transparent 70%)" }}>
+    <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">Now witness what humanity did next</p>
+    <h2 className="font-display text-3xl font-black text-white">
+      Space Exploration <span className="text-neon-cyan">Timeline</span>
+    </h2>
+  </div>
+
       {/* Header */}
       <section
         className="relative py-20 px-4 sm:px-6 lg:px-8 text-center overflow-hidden"
@@ -384,6 +530,178 @@ function TimelineItem({
 
       {/* Spacer for alternating layout */}
       <div className="hidden sm:block w-[calc(50%-2rem)]" />
+    </div>
+  );
+}
+function HistoryOfEverything() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrolled = -rect.top;
+      const totalHeight = rect.height - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / totalHeight));
+      const index = Math.min(
+        Math.floor(progress * HISTORY_ERAS.length),
+        HISTORY_ERAS.length - 1
+      );
+      setActiveIndex(index);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const era = HISTORY_ERAS[activeIndex];
+
+  return (
+    <div ref={containerRef} style={{ height: `${HISTORY_ERAS.length * 100}vh` }}>
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
+
+        {/* Background */}
+        <motion.div
+          className="absolute inset-0 transition-all duration-1000"
+          style={{ background: era.bg }}
+          key={era.id + "-bg"}
+        />
+
+        {/* Glow effect */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse 60% 40% at 50% 50%, ${era.glow}15 0%, transparent 70%)`,
+          }}
+          key={era.id + "-glow"}
+        />
+
+        {/* Progress dots */}
+        <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-20">
+          {HISTORY_ERAS.map((e, i) => (
+            <div
+              key={e.id}
+              className="w-2 h-2 rounded-full transition-all duration-300"
+              style={{
+                backgroundColor: i === activeIndex ? era.glow : "rgba(255,255,255,0.2)",
+                boxShadow: i === activeIndex ? `0 0 8px ${era.glow}` : "none",
+                transform: i === activeIndex ? "scale(1.5)" : "scale(1)",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Main Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center max-w-4xl mx-auto">
+
+          {/* Emoji */}
+          <motion.div
+            key={era.id + "-emoji"}
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.6, type: "spring" }}
+            className="text-7xl sm:text-8xl mb-6"
+          >
+            {era.emoji}
+          </motion.div>
+
+          {/* Year badge */}
+          <motion.div
+            key={era.id + "-year"}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
+            style={{
+              backgroundColor: `${era.glow}20`,
+              border: `1px solid ${era.glow}50`,
+              color: era.glow,
+            }}
+          >
+            {era.year}
+          </motion.div>
+
+          {/* Title */}
+          <motion.h2
+            key={era.id + "-title"}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-display text-4xl sm:text-6xl font-black text-white mb-2"
+            style={{ textShadow: `0 0 40px ${era.glow}60` }}
+          >
+            {era.title}
+          </motion.h2>
+
+          {/* Subtitle */}
+          <motion.p
+            key={era.id + "-sub"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="text-sm font-semibold uppercase tracking-widest mb-6"
+            style={{ color: era.glow }}
+          >
+            {era.subtitle}
+          </motion.p>
+
+          {/* Description */}
+          <motion.p
+            key={era.id + "-desc"}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-8"
+          >
+            {era.description}
+          </motion.p>
+
+          {/* Facts */}
+          <motion.div
+            key={era.id + "-facts"}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap justify-center gap-3"
+          >
+            {era.facts.map((fact) => (
+              <div
+                key={fact}
+                className="px-4 py-2 rounded-lg text-xs font-semibold"
+                style={{
+                  backgroundColor: `${era.glow}10`,
+                  border: `1px solid ${era.glow}30`,
+                  color: "rgba(255,255,255,0.8)",
+                }}
+              >
+                ✦ {fact}
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Counter */}
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          >
+            <span className="text-xs text-slate-500">
+              {activeIndex + 1} / {HISTORY_ERAS.length}
+            </span>
+            <div className="w-px h-8" style={{ background: `linear-gradient(to bottom, ${era.glow}, transparent)` }} />
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 }
