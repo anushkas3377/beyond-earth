@@ -536,7 +536,6 @@ function TimelineItem({
 function HistoryOfEverything() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -549,14 +548,11 @@ function HistoryOfEverything() {
         Math.floor(progress * HISTORY_ERAS.length),
         HISTORY_ERAS.length - 1
       );
-      if (index !== activeIndex) {
-        setPrevIndex(activeIndex);
-        setActiveIndex(index);
-      }
+      setActiveIndex(index);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeIndex]);
+  }, []);
 
   const era = HISTORY_ERAS[activeIndex];
 
@@ -564,100 +560,130 @@ function HistoryOfEverything() {
     <div ref={containerRef} style={{ height: `${HISTORY_ERAS.length * 120}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* Animated Background */}
+        {/* Background transition */}
         <motion.div
           key={era.id + "-bg"}
           className="absolute inset-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2 }}
+          transition={{ duration: 1.5 }}
           style={{ background: era.bg }}
         />
 
-        {/* Animated particles layer */}
-        <ParticleLayer era={era} />
+        {/* Canvas particles */}
+        <CinematicCanvas era={era} />
 
-        {/* Glow orb */}
+        {/* Center glow */}
         <motion.div
-          key={era.id + "-orb"}
-          className="absolute rounded-full blur-3xl pointer-events-none"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.15 }}
-          transition={{ duration: 1.5 }}
+          key={era.id + "-glow"}
+          className="absolute pointer-events-none"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 2 }}
           style={{
-            width: "60vw",
-            height: "60vw",
-            background: era.glow,
+            width: "80vw",
+            height: "80vh",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
+            background: `radial-gradient(ellipse at center, ${era.glow}18 0%, transparent 70%)`,
+            borderRadius: "50%",
+            filter: "blur(40px)",
           }}
         />
 
-        {/* Progress dots */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-20">
+        {/* Progress indicator */}
+        <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
           {HISTORY_ERAS.map((e, i) => (
             <motion.div
               key={e.id}
               animate={{
-                scale: i === activeIndex ? 1.8 : 1,
-                opacity: i === activeIndex ? 1 : 0.3,
+                height: i === activeIndex ? 32 : 4,
+                opacity: i === activeIndex ? 1 : 0.25,
               }}
-              transition={{ duration: 0.3 }}
-              className="w-2 h-2 rounded-full"
+              transition={{ duration: 0.4 }}
+              className="w-0.5 rounded-full"
               style={{
                 backgroundColor: i === activeIndex ? era.glow : "white",
-                boxShadow: i === activeIndex ? `0 0 10px ${era.glow}` : "none",
+                boxShadow: i === activeIndex ? `0 0 8px ${era.glow}` : "none",
               }}
             />
           ))}
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center max-w-4xl mx-auto">
+        {/* Era number */}
+        <motion.div
+          key={era.id + "-num"}
+          className="absolute top-8 right-8 font-display font-black z-20"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 0.15, x: 0 }}
+          transition={{ duration: 0.8 }}
+          style={{
+            fontSize: "clamp(80px, 15vw, 180px)",
+            color: era.glow,
+            lineHeight: 1,
+          }}
+        >
+          {String(activeIndex + 1).padStart(2, "0")}
+        </motion.div>
 
-          {/* Emoji with special animation per era */}
-          <EraEmoji era={era} />
+        {/* SVG Icon */}
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-10">
+          <CinematicIcon era={era} />
+        </div>
 
-          {/* Year badge */}
-          <motion.div
+        {/* Main content */}
+        <div className="relative z-10 flex flex-col justify-center h-full px-8 sm:px-16 max-w-5xl mx-auto pt-32">
+
+          {/* Year */}
+          <motion.p
             key={era.id + "-year"}
-            initial={{ opacity: 0, y: -30, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-5"
-            style={{
-              backgroundColor: `${era.glow}25`,
-              border: `1px solid ${era.glow}70`,
-              color: era.glow,
-              boxShadow: `0 0 20px ${era.glow}30`,
-            }}
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-xs font-black uppercase tracking-[0.4em] mb-4"
+            style={{ color: era.glow }}
           >
             {era.year}
-          </motion.div>
+          </motion.p>
 
           {/* Title */}
           <motion.h2
             key={era.id + "-title"}
-            initial={{ opacity: 0, y: 40, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.3, type: "spring", bounce: 0.3 }}
-            className="font-display text-5xl sm:text-7xl font-black text-white mb-3"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, type: "spring", bounce: 0.2 }}
+            className="font-display font-black text-white mb-3"
             style={{
-              textShadow: `0 0 60px ${era.glow}80, 0 0 120px ${era.glow}40`,
+              fontSize: "clamp(2.5rem, 7vw, 6rem)",
+              lineHeight: 1.05,
+              textShadow: `0 0 80px ${era.glow}50`,
             }}
           >
             {era.title}
           </motion.h2>
 
+          {/* Subtitle line */}
+          <motion.div
+            key={era.id + "-line"}
+            initial={{ width: 0 }}
+            animate={{ width: "4rem" }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="h-0.5 mb-4 rounded-full"
+            style={{
+              background: `linear-gradient(90deg, ${era.glow}, transparent)`,
+              boxShadow: `0 0 12px ${era.glow}`,
+            }}
+          />
+
           {/* Subtitle */}
           <motion.p
             key={era.id + "-sub"}
-            initial={{ opacity: 0, letterSpacing: "0.5em" }}
-            animate={{ opacity: 1, letterSpacing: "0.25em" }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xs font-black uppercase mb-6"
-            style={{ color: era.glow }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-xs font-bold uppercase tracking-[0.3em] mb-6"
+            style={{ color: `${era.glow}cc` }}
           >
             {era.subtitle}
           </motion.p>
@@ -667,8 +693,9 @@ function HistoryOfEverything() {
             key={era.id + "-desc"}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-8"
+            transition={{ duration: 0.7, delay: 0.6 }}
+            className="text-slate-300 leading-relaxed max-w-2xl mb-8"
+            style={{ fontSize: "clamp(0.9rem, 1.5vw, 1.1rem)" }}
           >
             {era.description}
           </motion.p>
@@ -676,130 +703,331 @@ function HistoryOfEverything() {
           {/* Facts */}
           <motion.div
             key={era.id + "-facts"}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-3"
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="flex flex-col gap-2"
           >
             {era.facts.map((fact, i) => (
               <motion.div
                 key={fact}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.7 + i * 0.1 }}
-                className="px-4 py-2 rounded-lg text-xs font-semibold"
-                style={{
-                  backgroundColor: `${era.glow}15`,
-                  border: `1px solid ${era.glow}40`,
-                  color: "rgba(255,255,255,0.85)",
-                  boxShadow: `0 0 15px ${era.glow}20`,
-                }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.8 + i * 0.1 }}
+                className="flex items-center gap-3 text-sm"
               >
-                ✦ {fact}
+                <div
+                  className="w-1 h-1 rounded-full flex-shrink-0"
+                  style={{
+                    backgroundColor: era.glow,
+                    boxShadow: `0 0 6px ${era.glow}`,
+                  }}
+                />
+                <span className="text-slate-400 font-medium">{fact}</span>
               </motion.div>
             ))}
           </motion.div>
+        </div>
 
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+        {/* Bottom scroll line */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20">
+          <motion.span
+            className="text-xs font-bold tracking-widest"
+            style={{ color: `${era.glow}80` }}
+            animate={{ opacity: [0.4, 1, 0.4] }}
+            transition={{ repeat: Infinity, duration: 2 }}
           >
-            <span className="text-xs font-bold" style={{ color: era.glow }}>
-              {activeIndex + 1} / {HISTORY_ERAS.length}
-            </span>
-            <motion.div
-              className="w-px h-10"
-              style={{
-                background: `linear-gradient(to bottom, ${era.glow}, transparent)`,
-                boxShadow: `0 0 8px ${era.glow}`,
-              }}
-              animate={{ scaleY: [0.5, 1, 0.5] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-            />
-          </motion.div>
+            {activeIndex + 1} — {HISTORY_ERAS.length}
+          </motion.span>
+          <motion.div
+            className="w-px h-12"
+            style={{ background: `linear-gradient(to bottom, ${era.glow}, transparent)` }}
+            animate={{ scaleY: [0, 1, 0], originY: 0 }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-// Special emoji animation per era
-function EraEmoji({ era }: { era: typeof HISTORY_ERAS[0] }) {
-  const animations: Record<string, object> = {
-    bigbang: {
-      initial: { scale: 0, rotate: 0 },
-      animate: { scale: [0, 2, 1], rotate: [0, 180, 360] },
-      transition: { duration: 1, type: "spring" },
-    },
-    stars: {
-      initial: { scale: 0, opacity: 0 },
-      animate: { scale: [0, 1.3, 1], opacity: 1, rotate: [0, 20, -20, 0] },
-      transition: { duration: 1, repeat: Infinity, repeatDelay: 3 },
-    },
-    earth: {
-      initial: { scale: 0, rotateY: -180 },
-      animate: { scale: 1, rotateY: 0, rotate: [0, 5, -5, 0] },
-      transition: { duration: 1.2, rotate: { repeat: Infinity, duration: 4 } },
-    },
-    life: {
-      initial: { scale: 0 },
-      animate: { scale: [1, 1.2, 1] },
-      transition: { duration: 1.5, repeat: Infinity },
-    },
-    dinosaurs: {
-      initial: { x: -100, opacity: 0 },
-      animate: { x: 0, opacity: 1 },
-      transition: { duration: 0.8, type: "spring", bounce: 0.5 },
-    },
-    humans: {
-      initial: { y: 50, opacity: 0 },
-      animate: { y: 0, opacity: 1, rotate: [0, -5, 5, 0] },
-      transition: { duration: 0.8, rotate: { repeat: Infinity, duration: 3 } },
-    },
-    civilization: {
-      initial: { y: 60, opacity: 0 },
-      animate: { y: 0, opacity: 1 },
-      transition: { duration: 1, type: "spring" },
-    },
-    inventions: {
-      initial: { scale: 0, rotate: -90 },
-      animate: { scale: 1, rotate: 0 },
-      transition: { duration: 0.8, type: "spring", bounce: 0.6 },
-    },
-    religion: {
-      initial: { scale: 0, opacity: 0 },
-      animate: { scale: 1, opacity: 1, rotate: [0, 5, -5, 0] },
-      transition: { duration: 1, rotate: { repeat: Infinity, duration: 5 } },
-    },
-    future: {
-      initial: { y: 80, opacity: 0 },
-      animate: { y: [0, -15, 0], opacity: 1 },
-      transition: { duration: 1, y: { repeat: Infinity, duration: 2 } },
-    },
-  };
-
-  const anim = animations[era.id] || {
-    initial: { scale: 0 },
-    animate: { scale: 1 },
-    transition: { duration: 0.8 },
+// Professional SVG Icons
+function CinematicIcon({ era }: { era: typeof HISTORY_ERAS[0] }) {
+  const icons: Record<string, React.ReactNode> = {
+    bigbang: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ scale: 0, rotate: 0 }}
+        animate={{ scale: 1, rotate: 360 }}
+        transition={{ duration: 1.5, type: "spring" }}
+      >
+        {[...Array(12)].map((_, i) => (
+          <motion.line
+            key={i}
+            x1="40" y1="40"
+            x2={40 + 35 * Math.cos((i * 30 * Math.PI) / 180)}
+            y2={40 + 35 * Math.sin((i * 30 * Math.PI) / 180)}
+            stroke={era.glow}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: [0, 1, 0.6] }}
+            transition={{ duration: 1, delay: i * 0.05 }}
+          />
+        ))}
+        <motion.circle cx="40" cy="40" r="8"
+          fill={era.glow}
+          animate={{ r: [8, 12, 8], opacity: [1, 0.7, 1] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          style={{ filter: `drop-shadow(0 0 12px ${era.glow})` }}
+        />
+      </motion.svg>
+    ),
+    stars: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        {[
+          { cx: 40, cy: 40, r: 6 },
+          { cx: 15, cy: 20, r: 3 },
+          { cx: 65, cy: 15, r: 4 },
+          { cx: 20, cy: 60, r: 2.5 },
+          { cx: 65, cy: 55, r: 3.5 },
+          { cx: 50, cy: 25, r: 2 },
+        ].map((s, i) => (
+          <motion.circle key={i} cx={s.cx} cy={s.cy} r={s.r}
+            fill={era.glow}
+            animate={{ opacity: [0.4, 1, 0.4], r: [s.r, s.r * 1.3, s.r] }}
+            transition={{ repeat: Infinity, duration: 2 + i * 0.3, delay: i * 0.2 }}
+            style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }}
+          />
+        ))}
+      </motion.svg>
+    ),
+    earth: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+      >
+        <circle cx="40" cy="40" r="35" fill="none"
+          stroke={era.glow} strokeWidth="1" opacity="0.3" />
+        <circle cx="40" cy="40" r="28"
+          fill={`${era.glow}20`} stroke={era.glow} strokeWidth="1.5" />
+        <ellipse cx="40" cy="40" rx="28" ry="10" fill="none"
+          stroke={era.glow} strokeWidth="1" opacity="0.5" />
+        <line x1="40" y1="12" x2="40" y2="68"
+          stroke={era.glow} strokeWidth="1" opacity="0.4" />
+        <motion.circle cx="68" cy="40" r="5"
+          fill={era.glow}
+          style={{ filter: `drop-shadow(0 0 8px ${era.glow})` }}
+        />
+      </motion.svg>
+    ),
+    life: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        {[0, 1, 2].map((i) => (
+          <motion.circle key={i} cx="40" cy="40"
+            r={15 + i * 12} fill="none"
+            stroke={era.glow} strokeWidth="1"
+            animate={{ r: [15 + i * 12, 18 + i * 12, 15 + i * 12], opacity: [0.6, 0.2, 0.6] }}
+            transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.4 }}
+          />
+        ))}
+        <motion.circle cx="40" cy="40" r="8"
+          fill={era.glow}
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+          style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
+        />
+      </motion.svg>
+    ),
+    dinosaurs: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ x: -40, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.8, type: "spring" }}
+      >
+        <motion.ellipse cx="40" cy="55" rx="35" ry="4"
+          fill={era.glow} opacity="0.2"
+          animate={{ rx: [35, 32, 35], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ repeat: Infinity, duration: 1 }}
+        />
+        {[20, 35, 50, 65].map((x, i) => (
+          <motion.line key={i}
+            x1={x} y1="51" x2={x} y2="65"
+            stroke={era.glow} strokeWidth="4" strokeLinecap="round"
+            animate={{ y1: [51, 48, 51], y2: [65, 62, 65] }}
+            transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.12 }}
+          />
+        ))}
+        <motion.ellipse cx="40" cy="38" rx="22" ry="14"
+          fill={`${era.glow}30`} stroke={era.glow} strokeWidth="1.5" />
+        <circle cx="28" cy="33" r="3" fill={era.glow}
+          style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }} />
+      </motion.svg>
+    ),
+    humans: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <circle cx="40" cy="20" r="10"
+          fill={`${era.glow}30`} stroke={era.glow} strokeWidth="1.5" />
+        <motion.line x1="40" y1="30" x2="40" y2="55"
+          stroke={era.glow} strokeWidth="2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        />
+        <motion.line x1="22" y1="40" x2="58" y2="40"
+          stroke={era.glow} strokeWidth="2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        />
+        <motion.line x1="40" y1="55" x2="28" y2="70"
+          stroke={era.glow} strokeWidth="2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+        />
+        <motion.line x1="40" y1="55" x2="52" y2="70"
+          stroke={era.glow} strokeWidth="2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        />
+      </motion.svg>
+    ),
+    civilization: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        {[
+          { x: 10, w: 12, h: 30 },
+          { x: 26, w: 12, h: 45 },
+          { x: 42, w: 12, h: 35 },
+          { x: 58, w: 12, h: 50 },
+        ].map((b, i) => (
+          <motion.rect key={i}
+            x={b.x} y={70 - b.h} width={b.w} height={b.h}
+            fill={`${era.glow}25`} stroke={era.glow} strokeWidth="1"
+            initial={{ scaleY: 0, originY: 1 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.8, delay: i * 0.15, type: "spring" }}
+            style={{ transformOrigin: `${b.x + b.w / 2}px 70px` }}
+          />
+        ))}
+        <line x1="5" y1="70" x2="75" y2="70"
+          stroke={era.glow} strokeWidth="1.5" opacity="0.6" />
+      </motion.svg>
+    ),
+    inventions: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        {[
+          { x1: 10, y1: 40, x2: 30, y2: 40 },
+          { x1: 50, y1: 40, x2: 70, y2: 40 },
+          { x1: 40, y1: 10, x2: 40, y2: 30 },
+          { x1: 40, y1: 50, x2: 40, y2: 70 },
+          { x1: 18, y1: 18, x2: 30, y2: 30 },
+          { x1: 50, y1: 50, x2: 62, y2: 62 },
+        ].map((l, i) => (
+          <motion.line key={i}
+            x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
+            stroke={era.glow} strokeWidth="2" strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+          />
+        ))}
+        <motion.circle cx="40" cy="40" r="10"
+          fill={`${era.glow}30`} stroke={era.glow} strokeWidth="2"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+          style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
+        />
+        <circle cx="40" cy="40" r="4" fill={era.glow} />
+      </motion.svg>
+    ),
+    religion: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        animate={{ rotate: [0, 360] }}
+        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+      >
+        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+          <motion.line key={i}
+            x1="40" y1="40"
+            x2={40 + 32 * Math.cos((angle * Math.PI) / 180)}
+            y2={40 + 32 * Math.sin((angle * Math.PI) / 180)}
+            stroke={era.glow} strokeWidth="1"
+            opacity="0.5"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1, delay: i * 0.1 }}
+          />
+        ))}
+        {[12, 22, 32].map((r, i) => (
+          <circle key={i} cx="40" cy="40" r={r}
+            fill="none" stroke={era.glow}
+            strokeWidth="0.8" opacity={0.6 - i * 0.15}
+          />
+        ))}
+        <circle cx="40" cy="40" r="5"
+          fill={era.glow}
+          style={{ filter: `drop-shadow(0 0 8px ${era.glow})` }}
+        />
+      </motion.svg>
+    ),
+    future: (
+      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <motion.ellipse cx="40" cy="55" rx="30" ry="8"
+          fill="none" stroke={era.glow} strokeWidth="1" opacity="0.4"
+          animate={{ rx: [30, 28, 30] }}
+          transition={{ repeat: Infinity, duration: 3 }}
+        />
+        <motion.ellipse cx="40" cy="55" rx="20" ry="5"
+          fill="none" stroke={era.glow} strokeWidth="1" opacity="0.6"
+          animate={{ rx: [20, 18, 20] }}
+          transition={{ repeat: Infinity, duration: 3, delay: 0.5 }}
+        />
+        <motion.path
+          d="M40 15 L28 45 L40 40 L52 45 Z"
+          fill={`${era.glow}40`} stroke={era.glow} strokeWidth="1.5"
+          animate={{ y: [0, -8, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
+        />
+        <motion.circle cx="40" cy="42"
+          r="3" fill={era.glow}
+          animate={{ opacity: [1, 0.5, 1] }}
+          transition={{ repeat: Infinity, duration: 1 }}
+        />
+      </motion.svg>
+    ),
   };
 
   return (
-    <motion.div
-      key={era.id + "-emoji"}
-      {...anim}
-      className="text-7xl sm:text-8xl mb-6 select-none"
-      style={{ filter: `drop-shadow(0 0 30px ${era.glow})` }}
-    >
-      {era.emoji}
-    </motion.div>
+    <div style={{ filter: `drop-shadow(0 0 20px ${era.glow}60)` }}>
+      {icons[era.id] ?? null}
+    </div>
   );
 }
 
-// Particle layer — alag alag era ke liye
-function ParticleLayer({ era }: { era: typeof HISTORY_ERAS[0] }) {
+// Cinematic particle canvas
+function CinematicCanvas({ era }: { era: typeof HISTORY_ERAS[0] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -811,61 +1039,91 @@ function ParticleLayer({ era }: { era: typeof HISTORY_ERAS[0] }) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles: {
+    type Particle = {
       x: number; y: number; vx: number; vy: number;
-      size: number; opacity: number; life: number;
-    }[] = [];
+      size: number; opacity: number; life: number; maxLife: number;
+    };
 
-    const count = era.id === "bigbang" ? 150 :
-                  era.id === "stars" ? 100 :
-                  era.id === "future" ? 80 : 50;
+    const particles: Particle[] = [];
+    const count =
+      era.id === "bigbang" ? 200 :
+      era.id === "stars" ? 150 :
+      era.id === "future" ? 120 : 60;
+
+    const spawn = (): Particle => ({
+      x: era.id === "bigbang" ? canvas.width / 2 : Math.random() * canvas.width,
+      y: era.id === "bigbang" ? canvas.height / 2 : Math.random() * canvas.height,
+      vx: era.id === "bigbang"
+        ? (Math.random() - 0.5) * 6
+        : era.id === "future"
+        ? (Math.random() - 0.5) * 1.5
+        : (Math.random() - 0.5) * 0.4,
+      vy: era.id === "bigbang"
+        ? (Math.random() - 0.5) * 6
+        : era.id === "future"
+        ? -Math.random() * 2
+        : (Math.random() - 0.5) * 0.4,
+      size: Math.random() * 2.5 + 0.5,
+      opacity: 0,
+      life: 0,
+      maxLife: 100 + Math.random() * 100,
+    });
 
     for (let i = 0; i < count; i++) {
-      particles.push({
-        x: era.id === "bigbang" ? canvas.width / 2 : Math.random() * canvas.width,
-        y: era.id === "bigbang" ? canvas.height / 2 : Math.random() * canvas.height,
-        vx: era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5,
-        vy: era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5,
-        size: Math.random() * (era.id === "bigbang" ? 4 : 2) + 1,
-        opacity: Math.random(),
-        life: Math.random(),
-      });
+      const p = spawn();
+      p.life = Math.random() * p.maxLife;
+      particles.push(p);
     }
 
     let animId: number;
+
+    const hexToRgb = (hex: string) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `${r},${g},${b}`;
+    };
+
+    const rgb = hexToRgb(era.particleColor.length === 7 ? era.particleColor : "#00E5FF");
+
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       for (const p of particles) {
+        p.life++;
         p.x += p.vx;
         p.y += p.vy;
-        p.life -= 0.003;
-        p.opacity = Math.sin(p.life * Math.PI);
 
-        if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height || p.life <= 0) {
-          p.x = era.id === "bigbang" ? canvas.width / 2 : Math.random() * canvas.width;
-          p.y = era.id === "bigbang" ? canvas.height / 2 : Math.random() * canvas.height;
-          p.vx = era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5;
-          p.vy = era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5;
-          p.life = 1;
+        const lifeRatio = p.life / p.maxLife;
+        p.opacity = lifeRatio < 0.2
+          ? lifeRatio / 0.2
+          : lifeRatio > 0.8
+          ? (1 - lifeRatio) / 0.2
+          : 1;
+
+        if (p.life >= p.maxLife ||
+          p.x < -10 || p.x > canvas.width + 10 ||
+          p.y < -10 || p.y > canvas.height + 10) {
+          Object.assign(p, spawn());
         }
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = era.particleColor + Math.floor(p.opacity * 255).toString(16).padStart(2, "0");
+        ctx.fillStyle = `rgba(${rgb}, ${p.opacity * 0.7})`;
         ctx.fill();
       }
+
       animId = requestAnimationFrame(animate);
     };
 
     animate();
     return () => cancelAnimationFrame(animId);
-  }, [era.id]);
+  }, [era.id, era.particleColor]);
 
   return (
     <canvas
       ref={canvasRef}
       className="absolute inset-0 pointer-events-none"
-      style={{ opacity: 0.6 }}
     />
   );
 }
