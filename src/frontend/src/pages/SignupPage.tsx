@@ -10,7 +10,8 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const [success, setSuccess] = useState(false); 
+   
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -24,7 +25,7 @@ export default function SignupPage() {
     if (error) {
       setError(error.message);
     } else {
-      navigate({ to: "/" });
+      setSuccess(true);
     }
   }
 
@@ -48,6 +49,17 @@ export default function SignupPage() {
             {error}
           </div>
         )}
+
+        {success && (
+          <div className="mb-4 px-4 py-3 rounded-lg text-sm font-semibold text-center"
+              style={{ 
+               background: "rgba(0,229,255,0.1)", 
+               border: "1px solid rgba(0,229,255,0.35)", 
+               color: "#00E5FF" 
+            }}>
+                 ✅ Check your email to confirm your account!
+          </div>
+       )}
 
         <form onSubmit={handleSignup} className="space-y-5">
           <div>
