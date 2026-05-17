@@ -305,17 +305,17 @@ export default function TimelinePage() {
   return (
     <div className="min-h-screen" data-ocid="timeline.page">
 
-  {/* 🌌 NEW — History of Everything */}
-  <HistoryOfEverything />
+      {/* 🌌 History of Everything */}
+      <HistoryOfEverything />
 
-  {/* Divider */}
-  <div className="py-16 text-center"
-    style={{ background: "radial-gradient(ellipse at center, rgba(0,229,255,0.05) 0%, transparent 70%)" }}>
-    <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">Now witness what humanity did next</p>
-    <h2 className="font-display text-3xl font-black text-white">
-      Space Exploration <span className="text-neon-cyan">Timeline</span>
-    </h2>
-  </div>
+      {/* Divider */}
+      <div className="py-16 text-center"
+        style={{ background: "radial-gradient(ellipse at center, rgba(0,229,255,0.05) 0%, transparent 70%)" }}>
+        <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">Now witness what humanity did next</p>
+        <h2 className="font-display text-3xl font-black text-white">
+          Space Exploration <span className="text-neon-cyan">Timeline</span>
+        </h2>
+      </div>
 
       {/* Header */}
       <section
@@ -533,6 +533,10 @@ function TimelineItem({
     </div>
   );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HistoryOfEverything — scroll-driven cinematic section
+// ─────────────────────────────────────────────────────────────────────────────
 function HistoryOfEverything() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -751,282 +755,668 @@ function HistoryOfEverything() {
   );
 }
 
-// Professional SVG Icons
+// ─────────────────────────────────────────────────────────────────────────────
+// CinematicIcon — REALISTIC detailed SVG illustrations (replaces old cartoonish icons)
+// ─────────────────────────────────────────────────────────────────────────────
 function CinematicIcon({ era }: { era: typeof HISTORY_ERAS[0] }) {
   const icons: Record<string, React.ReactNode> = {
+
+    // ── BIG BANG — shockwave rings + 16 plasma jets + white-hot core ──────────
     bigbang: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
-        initial={{ scale: 0, rotate: 0 }}
-        animate={{ scale: 1, rotate: 360 }}
-        transition={{ duration: 1.5, type: "spring" }}
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
+        initial={{ scale: 0.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.8, type: "spring", bounce: 0.3 }}
       >
-        {[...Array(12)].map((_, i) => (
-          <motion.line
-            key={i}
-            x1="40" y1="40"
-            x2={40 + 35 * Math.cos((i * 30 * Math.PI) / 180)}
-            y2={40 + 35 * Math.sin((i * 30 * Math.PI) / 180)}
-            stroke={era.glow}
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: [0, 1, 0.6] }}
-            transition={{ duration: 1, delay: i * 0.05 }}
+        <defs>
+          <radialGradient id="bb-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={era.glow} stopOpacity="1" />
+            <stop offset="40%" stopColor={era.glow} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={era.glow} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {/* Expanding shockwave rings */}
+        {[18, 28, 38, 46].map((r, i) => (
+          <motion.circle key={i} cx="50" cy="50" r={r}
+            fill="none" stroke={era.glow}
+            strokeWidth={2 - i * 0.35}
+            opacity={0.7 - i * 0.13}
+            animate={{ r: [r, r + 6, r], opacity: [0.7 - i * 0.13, 0.3, 0.7 - i * 0.13] }}
+            transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.3, ease: "easeInOut" }}
           />
         ))}
-        <motion.circle cx="40" cy="40" r="8"
-          fill={era.glow}
-          animate={{ r: [8, 12, 8], opacity: [1, 0.7, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          style={{ filter: `drop-shadow(0 0 12px ${era.glow})` }}
+        {/* 16 directional plasma jets */}
+        {[...Array(16)].map((_, i) => {
+          const angle = (i * 22.5 * Math.PI) / 180;
+          const len = i % 2 === 0 ? 44 : 30;
+          return (
+            <motion.line key={i}
+              x1={50 + 7 * Math.cos(angle)} y1={50 + 7 * Math.sin(angle)}
+              x2={50 + len * Math.cos(angle)} y2={50 + len * Math.sin(angle)}
+              stroke={era.glow}
+              strokeWidth={i % 2 === 0 ? 1.2 : 0.6}
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: [0, 1, 0.5], opacity: [0, 1, 0.3] }}
+              transition={{ duration: 1.4, delay: 0.1 + i * 0.04, repeat: Infinity, repeatDelay: 1.2 }}
+            />
+          );
+        })}
+        {/* Core glow */}
+        <motion.circle cx="50" cy="50" r="8"
+          fill="url(#bb-core)"
+          animate={{ r: [8, 12, 8] }}
+          transition={{ repeat: Infinity, duration: 1.8 }}
+          style={{ filter: `drop-shadow(0 0 14px ${era.glow})` }}
         />
+        {/* White-hot centre point */}
+        <circle cx="50" cy="50" r="3" fill="white" opacity="0.95" />
       </motion.svg>
     ),
+
+    // ── STARS — bright star with diffraction spikes + dim background cluster ──
     stars: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2 }}
+      >
+        {/* Background dim stars */}
+        {[[12,18],[80,12],[25,75],[72,68],[88,45],[45,88],[60,30],[18,50]].map(([x,y], i) => (
+          <motion.circle key={i} cx={x} cy={y} r="1"
+            fill="white"
+            animate={{ opacity: [0.2, 0.9, 0.2] }}
+            transition={{ repeat: Infinity, duration: 2 + i * 0.4, delay: i * 0.3 }}
+          />
+        ))}
+        {/* Main star — 4 diffraction spikes */}
+        <motion.g animate={{ opacity: [0.85, 1, 0.85] }}
+          transition={{ repeat: Infinity, duration: 2.5 }}>
+          {[0, 90, 45, 135].map((deg, i) => {
+            const rad = (deg * Math.PI) / 180;
+            const len = i < 2 ? 30 : 18;
+            return (
+              <motion.line key={i}
+                x1={50 - len * Math.cos(rad)} y1={50 - len * Math.sin(rad)}
+                x2={50 + len * Math.cos(rad)} y2={50 + len * Math.sin(rad)}
+                stroke="white" strokeWidth={i < 2 ? 0.9 : 0.4}
+                strokeLinecap="round" opacity={0.85}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1, delay: 0.3 + i * 0.1 }}
+                style={{ transformOrigin: "50px 50px" }}
+              />
+            );
+          })}
+          <circle cx="50" cy="50" r="14" fill={era.glow} opacity="0.2" />
+          <circle cx="50" cy="50" r="7" fill={era.glow} opacity="0.5" />
+          <circle cx="50" cy="50" r="3.5" fill="white" />
+        </motion.g>
+        {/* Secondary star */}
+        <motion.g animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ repeat: Infinity, duration: 3.5, delay: 1 }}>
+          <circle cx="22" cy="28" r="4" fill={era.glow} opacity="0.35" />
+          <circle cx="22" cy="28" r="2" fill="white" opacity="0.9" />
+          <line x1="22" y1="20" x2="22" y2="36" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <line x1="14" y1="28" x2="30" y2="28" stroke="white" strokeWidth="0.5" opacity="0.6" />
+        </motion.g>
+      </motion.svg>
+    ),
+
+    // ── EARTH — realistic globe with continents, atmosphere, specular highlight ─
+    earth: (
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        {[
-          { cx: 40, cy: 40, r: 6 },
-          { cx: 15, cy: 20, r: 3 },
-          { cx: 65, cy: 15, r: 4 },
-          { cx: 20, cy: 60, r: 2.5 },
-          { cx: 65, cy: 55, r: 3.5 },
-          { cx: 50, cy: 25, r: 2 },
-        ].map((s, i) => (
-          <motion.circle key={i} cx={s.cx} cy={s.cy} r={s.r}
-            fill={era.glow}
-            animate={{ opacity: [0.4, 1, 0.4], r: [s.r, s.r * 1.3, s.r] }}
-            transition={{ repeat: Infinity, duration: 2 + i * 0.3, delay: i * 0.2 }}
-            style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }}
-          />
-        ))}
-      </motion.svg>
-    ),
-    earth: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
-        animate={{ rotate: 360 }}
-        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-      >
-        <circle cx="40" cy="40" r="35" fill="none"
-          stroke={era.glow} strokeWidth="1" opacity="0.3" />
-        <circle cx="40" cy="40" r="28"
-          fill={`${era.glow}20`} stroke={era.glow} strokeWidth="1.5" />
-        <ellipse cx="40" cy="40" rx="28" ry="10" fill="none"
-          stroke={era.glow} strokeWidth="1" opacity="0.5" />
-        <line x1="40" y1="12" x2="40" y2="68"
-          stroke={era.glow} strokeWidth="1" opacity="0.4" />
-        <motion.circle cx="68" cy="40" r="5"
-          fill={era.glow}
-          style={{ filter: `drop-shadow(0 0 8px ${era.glow})` }}
+        <defs>
+          <radialGradient id="earth-sphere" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor={era.glow} stopOpacity="0.85" />
+            <stop offset="55%" stopColor={era.glow} stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#000820" stopOpacity="0.95" />
+          </radialGradient>
+          <clipPath id="earth-clip"><circle cx="50" cy="50" r="34" /></clipPath>
+          <radialGradient id="earth-highlight" cx="30%" cy="25%" r="50%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {/* Atmosphere rings */}
+        <motion.circle cx="50" cy="50" r="40"
+          fill="none" stroke={era.glow} strokeWidth="3" opacity="0.12"
+          animate={{ opacity: [0.08, 0.18, 0.08] }}
+          transition={{ repeat: Infinity, duration: 4 }}
         />
+        <circle cx="50" cy="50" r="37" fill="none" stroke={era.glow} strokeWidth="1.5" opacity="0.18" />
+        {/* Globe base */}
+        <circle cx="50" cy="50" r="34" fill="url(#earth-sphere)" />
+        {/* Continents — scrolling */}
+        <g clipPath="url(#earth-clip)">
+          <motion.g animate={{ x: [0, -10, 0] }}
+            transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
+            {/* Americas */}
+            <path d="M38 26 C34 29 30 34 31 41 C32 47 35 51 33 57 C31 63 34 70 38 72 C41 68 44 61 43 55 C42 49 45 43 44 37 C43 31 40 24 38 26Z"
+              fill={era.glow} opacity="0.55" />
+            {/* Europe/Africa */}
+            <path d="M55 31 C52 33 50 37 51 43 C52 47 55 50 54 56 C53 62 56 68 59 70 C62 66 63 59 62 53 C61 47 64 41 63 35 C62 29 58 27 55 31Z"
+              fill={era.glow} opacity="0.5" />
+            {/* Asia */}
+            <path d="M68 29 C64 31 62 37 65 43 C68 47 72 45 74 51 C76 55 74 62 71 64 C74 60 77 53 76 47 C75 41 78 35 75 30 C73 26 70 26 68 29Z"
+              fill={era.glow} opacity="0.52" />
+            {/* Ice caps */}
+            <ellipse cx="50" cy="17" rx="22" ry="6" fill="white" opacity="0.28" />
+            <ellipse cx="50" cy="83" rx="17" ry="5" fill="white" opacity="0.2" />
+            {/* Cloud wisps */}
+            <path d="M28 40 Q37 36 46 40 Q37 44 28 40Z" fill="white" opacity="0.18" />
+            <path d="M55 56 Q63 52 71 56 Q63 60 55 56Z" fill="white" opacity="0.18" />
+          </motion.g>
+        </g>
+        {/* Specular highlight */}
+        <circle cx="50" cy="50" r="34" fill="url(#earth-highlight)" />
+        {/* Terminator shadow */}
+        <ellipse cx="50" cy="50" rx="17" ry="34"
+          fill="black" opacity="0.25" clipPath="url(#earth-clip)" />
       </motion.svg>
     ),
+
+    // ── LIFE — realistic DNA double helix with base pairs ─────────────────────
     life: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
       >
-        {[0, 1, 2].map((i) => (
-          <motion.circle key={i} cx="40" cy="40"
-            r={15 + i * 12} fill="none"
-            stroke={era.glow} strokeWidth="1"
-            animate={{ r: [15 + i * 12, 18 + i * 12, 15 + i * 12], opacity: [0.6, 0.2, 0.6] }}
-            transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.4 }}
-          />
-        ))}
-        <motion.circle cx="40" cy="40" r="8"
-          fill={era.glow}
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-          style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
+        {/* Base-pair rungs */}
+        {[...Array(10)].map((_, i) => {
+          const t = i / 9;
+          const y = 10 + t * 80;
+          const wave = Math.sin(t * Math.PI * 3);
+          const x1 = 50 + wave * 20;
+          const x2 = 50 - wave * 20;
+          return (
+            <g key={i}>
+              <motion.line x1={x1} y1={y} x2={x2} y2={y}
+                stroke={era.glow} strokeWidth="1.2" opacity="0.45"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.4, delay: 0.5 + i * 0.08 }}
+                style={{ transformOrigin: `50px ${y}px` }}
+              />
+              <motion.circle cx={x1} cy={y} r="2.5"
+                fill={era.glow}
+                style={{ filter: `drop-shadow(0 0 4px ${era.glow})` }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.6 + i * 0.08 }}
+              />
+              <motion.circle cx={x2} cy={y} r="2.5"
+                fill={era.glow} opacity="0.65"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.65 + i * 0.08 }}
+              />
+            </g>
+          );
+        })}
+        {/* Strand 1 */}
+        <motion.path
+          d={[...Array(20)].map((_, i) => {
+            const t = i / 19;
+            const y = 10 + t * 80;
+            const x = 50 + Math.sin(t * Math.PI * 3) * 20;
+            return `${i === 0 ? "M" : "L"}${x},${y}`;
+          }).join(" ")}
+          fill="none" stroke={era.glow} strokeWidth="2"
+          style={{ filter: `drop-shadow(0 0 3px ${era.glow})` }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, delay: 0.2 }}
+        />
+        {/* Strand 2 */}
+        <motion.path
+          d={[...Array(20)].map((_, i) => {
+            const t = i / 19;
+            const y = 10 + t * 80;
+            const x = 50 - Math.sin(t * Math.PI * 3) * 20;
+            return `${i === 0 ? "M" : "L"}${x},${y}`;
+          }).join(" ")}
+          fill="none" stroke={era.glow} strokeWidth="2" opacity="0.65"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, delay: 0.4 }}
         />
       </motion.svg>
     ),
+
+    // ── DINOSAURS — anatomical T-Rex silhouette ───────────────────────────────
     dinosaurs: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
-        initial={{ x: -40, opacity: 0 }}
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
+        initial={{ x: -30, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8, type: "spring" }}
+        transition={{ duration: 0.9, type: "spring", bounce: 0.2 }}
       >
-        <motion.ellipse cx="40" cy="55" rx="35" ry="4"
-          fill={era.glow} opacity="0.2"
-          animate={{ rx: [35, 32, 35], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ repeat: Infinity, duration: 1 }}
+        {/* Ground shadow */}
+        <ellipse cx="52" cy="93" rx="30" ry="4" fill={era.glow} opacity="0.1" />
+        {/* Body */}
+        <motion.path
+          d="M60 70 C62 65 65 60 68 58 C72 56 76 57 78 60 C80 63 79 68 76 70 C74 72 70 73 68 72 C66 71 64 70 62 72 C60 74 58 78 56 82 L50 85 C48 86 46 86 45 84 L48 80 C49 77 51 73 52 70 L42 71 C40 74 38 78 36 82 L30 85 C28 86 26 85 26 83 L29 79 C30 76 32 72 33 70 C34 68 34 65 33 62 C32 58 31 54 33 50 C35 46 39 44 44 44 L48 44 C51 43 54 42 56 40 C58 38 59 35 58 32 L57 26 C57 24 58 22 60 22 C64 22 68 26 70 30 C72 34 72 38 70 42 C68 45 65 47 63 50 C61 53 60 57 60 62Z"
+          fill={`${era.glow}18`}
+          stroke={era.glow}
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+          style={{ filter: `drop-shadow(0 0 8px ${era.glow}50)` }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.5, delay: 0.2 }}
         />
-        {[20, 35, 50, 65].map((x, i) => (
-          <motion.line key={i}
-            x1={x} y1="51" x2={x} y2="65"
-            stroke={era.glow} strokeWidth="4" strokeLinecap="round"
-            animate={{ y1: [51, 48, 51], y2: [65, 62, 65] }}
-            transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.12 }}
-          />
-        ))}
-        <motion.ellipse cx="40" cy="38" rx="22" ry="14"
-          fill={`${era.glow}30`} stroke={era.glow} strokeWidth="1.5" />
-        <circle cx="28" cy="33" r="3" fill={era.glow}
-          style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }} />
+        {/* Head */}
+        <motion.path
+          d="M58 22 C60 18 65 15 70 16 C74 17 77 20 78 24 C79 27 78 30 76 32 C74 34 71 34 70 32 C69 30 70 28 70 26 C70 24 68 22 65 22Z"
+          fill={`${era.glow}28`} stroke={era.glow} strokeWidth="1.2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        />
+        {/* Eye */}
+        <motion.circle cx="72" cy="20" r="2.2"
+          fill={era.glow}
+          style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }}
+          animate={{ opacity: [1, 0.2, 1] }}
+          transition={{ repeat: Infinity, duration: 3.5, delay: 2 }}
+        />
+        <circle cx="72" cy="20" r="0.9" fill="black" />
+        {/* Tiny forearms */}
+        <path d="M56 42 L51 47 L53 49 L58 44" fill="none" stroke={era.glow} strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+        {/* Tail */}
+        <motion.path
+          d="M33 62 C28 64 21 66 15 65 C11 64 10 62 12 60 C14 58 18 59 22 60 C26 61 30 62 33 62Z"
+          fill={`${era.glow}12`} stroke={era.glow} strokeWidth="1"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        />
+        {/* Breathing */}
+        <motion.ellipse cx="50" cy="55" rx="7" ry="5"
+          fill="none" stroke={era.glow} strokeWidth="0.5" opacity="0.25"
+          animate={{ ry: [5, 6.5, 5] }}
+          transition={{ repeat: Infinity, duration: 1.6 }}
+        />
       </motion.svg>
     ),
+
+    // ── HUMANS — Vitruvian proportions with ribcage + anatomy detail ──────────
     humans: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 1 }}
       >
-        <circle cx="40" cy="20" r="10"
-          fill={`${era.glow}30`} stroke={era.glow} strokeWidth="1.5" />
-        <motion.line x1="40" y1="30" x2="40" y2="55"
-          stroke={era.glow} strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+        <defs>
+          <radialGradient id="human-aura" cx="50%" cy="30%" r="50%">
+            <stop offset="0%" stopColor={era.glow} stopOpacity="0.25" />
+            <stop offset="100%" stopColor={era.glow} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="50" cy="50" rx="38" ry="46" fill="url(#human-aura)" />
+        {/* Head */}
+        <motion.path
+          d="M50 9 C43 9 38 14 38 20 C38 25 40 29 44 31 C44 34 44 37 46 38 L54 38 C56 37 56 34 56 31 C60 29 62 25 62 20 C62 14 57 9 50 9Z"
+          fill={`${era.glow}22`} stroke={era.glow} strokeWidth="1.2"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.8 }}
         />
-        <motion.line x1="22" y1="40" x2="58" y2="40"
-          stroke={era.glow} strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+        {/* Eyes */}
+        <circle cx="46" cy="21" r="1.2" fill={era.glow} />
+        <circle cx="54" cy="21" r="1.2" fill={era.glow} />
+        {/* Neck */}
+        <rect x="47" y="37" width="6" height="5" fill={`${era.glow}18`} stroke={era.glow} strokeWidth="0.8" />
+        {/* Torso */}
+        <motion.path
+          d="M35 42 L40 42 C40 42 38 52 38 58 C38 64 40 68 40 68 L60 68 C60 68 62 64 62 58 C62 52 60 42 60 42 L65 42 C65 54 66 62 64 68 L62 74 L38 74 L36 68 C34 62 35 54 35 42Z"
+          fill={`${era.glow}18`} stroke={era.glow} strokeWidth="1.2" strokeLinejoin="round"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
         />
-        <motion.line x1="40" y1="55" x2="28" y2="70"
-          stroke={era.glow} strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+        {/* Ribcage */}
+        {[48, 53, 58].map((y, i) => (
+          <motion.path key={i}
+            d={`M40 ${y} C44 ${y + 2} 56 ${y + 2} 60 ${y}`}
+            fill="none" stroke={era.glow} strokeWidth="0.7" opacity="0.3"
+            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+            transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
+          />
+        ))}
+        {/* Arms spread */}
+        <motion.line x1="36" y1="46" x2="16" y2="60"
+          stroke={era.glow} strokeWidth="2.5" strokeLinecap="round"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        />
+        <motion.line x1="64" y1="46" x2="84" y2="60"
+          stroke={era.glow} strokeWidth="2.5" strokeLinecap="round"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+        />
+        <ellipse cx="15" cy="61" rx="3" ry="2" fill={era.glow} opacity="0.6" />
+        <ellipse cx="85" cy="61" rx="3" ry="2" fill={era.glow} opacity="0.6" />
+        {/* Legs */}
+        <motion.line x1="42" y1="74" x2="36" y2="93"
+          stroke={era.glow} strokeWidth="2.5" strokeLinecap="round"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ duration: 0.6, delay: 0.7 }}
         />
-        <motion.line x1="40" y1="55" x2="52" y2="70"
-          stroke={era.glow} strokeWidth="2"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+        <motion.line x1="58" y1="74" x2="64" y2="93"
+          stroke={era.glow} strokeWidth="2.5" strokeLinecap="round"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.6, delay: 0.75 }}
         />
+        <ellipse cx="34" cy="94" rx="5" ry="2" fill={era.glow} opacity="0.55" />
+        <ellipse cx="66" cy="94" rx="5" ry="2" fill={era.glow} opacity="0.55" />
       </motion.svg>
     ),
+
+    // ── CIVILIZATION — pyramid + colosseum arcs + obelisk + moon ─────────────
     civilization: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        {[
-          { x: 10, w: 12, h: 30 },
-          { x: 26, w: 12, h: 45 },
-          { x: 42, w: 12, h: 35 },
-          { x: 58, w: 12, h: 50 },
-        ].map((b, i) => (
-          <motion.rect key={i}
-            x={b.x} y={70 - b.h} width={b.w} height={b.h}
-            fill={`${era.glow}25`} stroke={era.glow} strokeWidth="1"
-            initial={{ scaleY: 0, originY: 1 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 0.8, delay: i * 0.15, type: "spring" }}
-            style={{ transformOrigin: `${b.x + b.w / 2}px 70px` }}
-          />
-        ))}
-        <line x1="5" y1="70" x2="75" y2="70"
-          stroke={era.glow} strokeWidth="1.5" opacity="0.6" />
-      </motion.svg>
-    ),
-    inventions: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        {[
-          { x1: 10, y1: 40, x2: 30, y2: 40 },
-          { x1: 50, y1: 40, x2: 70, y2: 40 },
-          { x1: 40, y1: 10, x2: 40, y2: 30 },
-          { x1: 40, y1: 50, x2: 40, y2: 70 },
-          { x1: 18, y1: 18, x2: 30, y2: 30 },
-          { x1: 50, y1: 50, x2: 62, y2: 62 },
-        ].map((l, i) => (
-          <motion.line key={i}
-            x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
-            stroke={era.glow} strokeWidth="2" strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-          />
-        ))}
-        <motion.circle cx="40" cy="40" r="10"
-          fill={`${era.glow}30`} stroke={era.glow} strokeWidth="2"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-          style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
+        <defs>
+          <linearGradient id="civ-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={era.glow} stopOpacity="0.04" />
+            <stop offset="100%" stopColor={era.glow} stopOpacity="0.18" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="82" width="100" height="2" fill={era.glow} opacity="0.4" />
+        <rect x="0" y="84" width="100" height="16" fill="url(#civ-sky)" />
+        {/* Pyramid */}
+        <motion.path d="M12 82 L30 44 L48 82Z"
+          fill={`${era.glow}12`} stroke={era.glow} strokeWidth="1.2"
+          initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+          transition={{ duration: 0.9, type: "spring", bounce: 0.1 }}
+          style={{ transformOrigin: "30px 82px" }}
         />
-        <circle cx="40" cy="40" r="4" fill={era.glow} />
-      </motion.svg>
-    ),
-    religion: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
-        animate={{ rotate: [0, 360] }}
-        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-      >
-        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-          <motion.line key={i}
-            x1="40" y1="40"
-            x2={40 + 32 * Math.cos((angle * Math.PI) / 180)}
-            y2={40 + 32 * Math.sin((angle * Math.PI) / 180)}
-            stroke={era.glow} strokeWidth="1"
-            opacity="0.5"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1, delay: i * 0.1 }}
+        {[0.3, 0.55, 0.78].map((t, i) => (
+          <line key={i}
+            x1={12 + (30 - 12) * t} y1={82 - (82 - 44) * t}
+            x2={48 - (48 - 30) * t} y2={82 - (82 - 44) * t}
+            stroke={era.glow} strokeWidth="0.5" opacity="0.3"
           />
         ))}
-        {[12, 22, 32].map((r, i) => (
-          <circle key={i} cx="40" cy="40" r={r}
-            fill="none" stroke={era.glow}
-            strokeWidth="0.8" opacity={0.6 - i * 0.15}
+        {/* Colosseum */}
+        <motion.path d="M52 82 C52 70 59 64 67 64 C75 64 82 70 82 82"
+          fill={`${era.glow}08`} stroke={era.glow} strokeWidth="1.2"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+        />
+        {[56, 62, 67, 72, 78].map((x, i) => (
+          <motion.line key={i} x1={x} y1={78} x2={x} y2={64 + (i === 0 || i === 4 ? 8 : 3)}
+            stroke={era.glow} strokeWidth="1" opacity="0.55"
+            initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 + i * 0.08 }}
+            style={{ transformOrigin: `${x}px 78px` }}
           />
         ))}
-        <circle cx="40" cy="40" r="5"
+        {/* Obelisk */}
+        <motion.path d="M87 82 L90 49 L93 82Z"
+          fill={`${era.glow}18`} stroke={era.glow} strokeWidth="1"
+          initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+          transition={{ duration: 0.7, delay: 0.5, type: "spring" }}
+          style={{ transformOrigin: "90px 82px" }}
+        />
+        <motion.circle cx="90" cy="49" r="2"
           fill={era.glow}
-          style={{ filter: `drop-shadow(0 0 8px ${era.glow})` }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }}
         />
+        {/* Moon */}
+        <motion.circle cx="20" cy="20" r="8"
+          fill="none" stroke={era.glow} strokeWidth="1" opacity="0.4"
+          animate={{ opacity: [0.25, 0.6, 0.25] }}
+          transition={{ repeat: Infinity, duration: 5 }}
+        />
+        <circle cx="20" cy="20" r="6" fill={era.glow} opacity="0.15" />
       </motion.svg>
     ),
-    future: (
-      <motion.svg width="80" height="80" viewBox="0 0 80 80"
+
+    // ── INVENTIONS — interlocking gears (counter-rotating) + lightbulb ────────
+    inventions: (
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <motion.ellipse cx="40" cy="55" rx="30" ry="8"
-          fill="none" stroke={era.glow} strokeWidth="1" opacity="0.4"
-          animate={{ rx: [30, 28, 30] }}
+        {/* Large gear */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+          style={{ transformOrigin: "32px 62px" }}
+        >
+          {[...Array(8)].map((_, i) => {
+            const angle = (i * 45 * Math.PI) / 180;
+            const ix = 32 + 17 * Math.cos(angle);
+            const iy = 62 + 17 * Math.sin(angle);
+            return (
+              <rect key={i} x={ix - 3} y={iy - 3} width="6" height="6" rx="1"
+                fill={`${era.glow}35`} stroke={era.glow} strokeWidth="0.8"
+                transform={`rotate(${i * 45} ${ix} ${iy})`}
+              />
+            );
+          })}
+          <circle cx="32" cy="62" r="13" fill={`${era.glow}12`} stroke={era.glow} strokeWidth="1.5" />
+          <circle cx="32" cy="62" r="5" fill={`${era.glow}30`} stroke={era.glow} strokeWidth="1" />
+          <circle cx="32" cy="62" r="2.5" fill={era.glow} />
+        </motion.g>
+        {/* Small counter-gear */}
+        <motion.g
+          animate={{ rotate: -360 }}
+          transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+          style={{ transformOrigin: "57px 62px" }}
+        >
+          {[...Array(6)].map((_, i) => {
+            const angle = (i * 60 * Math.PI) / 180;
+            const ix = 57 + 10 * Math.cos(angle);
+            const iy = 62 + 10 * Math.sin(angle);
+            return (
+              <rect key={i} x={ix - 2} y={iy - 2} width="4" height="4" rx="0.5"
+                fill={`${era.glow}35`} stroke={era.glow} strokeWidth="0.6"
+                transform={`rotate(${i * 60} ${ix} ${iy})`}
+              />
+            );
+          })}
+          <circle cx="57" cy="62" r="8" fill={`${era.glow}12`} stroke={era.glow} strokeWidth="1" />
+          <circle cx="57" cy="62" r="2.5" fill={`${era.glow}40`} />
+          <circle cx="57" cy="62" r="1.2" fill={era.glow} />
+        </motion.g>
+        {/* Lightbulb */}
+        <motion.path
+          d="M76 20 C70 20 66 25 66 31 C66 36 69 40 72 42 L72 49 L80 49 L80 42 C83 40 86 36 86 31 C86 25 82 20 76 20Z"
+          fill={`${era.glow}18`} stroke={era.glow} strokeWidth="1.2"
+          style={{ filter: `drop-shadow(0 0 8px ${era.glow}70)` }}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+        />
+        {/* Filament */}
+        <motion.path d="M72 45 Q74 42 76 45 Q78 42 80 45"
+          fill="none" stroke={era.glow} strokeWidth="1"
+          animate={{ opacity: [0.3, 1, 0.3] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        />
+        <line x1="72" y1="49" x2="80" y2="49" stroke={era.glow} strokeWidth="1" opacity="0.7" />
+        <line x1="73" y1="53" x2="79" y2="53" stroke={era.glow} strokeWidth="1" opacity="0.5" />
+        {/* Glow pulse */}
+        <motion.circle cx="76" cy="32" r="7"
+          fill={era.glow} opacity="0"
+          animate={{ opacity: [0, 0.12, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        />
+      </motion.svg>
+    ),
+
+    // ── RELIGION — 12-petal mandala + 8-petal inner + hexagram + jewel ────────
+    religion: (
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2 }}
+      >
+        {/* Outer petals — slow rotate */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+          style={{ transformOrigin: "50px 50px" }}
+        >
+          {[...Array(12)].map((_, i) => {
+            const angle = (i * 30 * Math.PI) / 180;
+            return (
+              <ellipse key={i}
+                cx={50 + 36 * Math.cos(angle)} cy={50 + 36 * Math.sin(angle)}
+                rx="5" ry="9"
+                fill={`${era.glow}10`} stroke={era.glow} strokeWidth="0.5" opacity="0.45"
+                transform={`rotate(${i * 30} ${50 + 36 * Math.cos(angle)} ${50 + 36 * Math.sin(angle)})`}
+              />
+            );
+          })}
+        </motion.g>
+        {/* Inner petals — counter rotate */}
+        <motion.g
+          animate={{ rotate: -360 }}
+          transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
+          style={{ transformOrigin: "50px 50px" }}
+        >
+          {[...Array(8)].map((_, i) => {
+            const angle = (i * 45 * Math.PI) / 180;
+            return (
+              <ellipse key={i}
+                cx={50 + 22 * Math.cos(angle)} cy={50 + 22 * Math.sin(angle)}
+                rx="3" ry="7"
+                fill={`${era.glow}18`} stroke={era.glow} strokeWidth="0.7" opacity="0.65"
+                transform={`rotate(${i * 45} ${50 + 22 * Math.cos(angle)} ${50 + 22 * Math.sin(angle)})`}
+              />
+            );
+          })}
+        </motion.g>
+        {/* Sacred circles */}
+        {[40, 28, 18, 10].map((r, i) => (
+          <circle key={i} cx="50" cy="50" r={r}
+            fill="none" stroke={era.glow}
+            strokeWidth={0.6 + i * 0.1}
+            opacity={0.2 + i * 0.1}
+          />
+        ))}
+        {/* Hexagram */}
+        {[0, 60].map((rot, i) => (
+          <motion.path key={i}
+            d="M50 33 L44 45 L56 45Z"
+            fill={`${era.glow}18`} stroke={era.glow} strokeWidth="0.8"
+            transform={`rotate(${rot} 50 50)`}
+            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+            transition={{ duration: 1, delay: 0.3 + i * 0.2 }}
+          />
+        ))}
+        {/* Central jewel */}
+        <motion.circle cx="50" cy="50" r="6"
+          fill={era.glow} opacity="0.35"
+          animate={{ r: [6, 8, 6] }}
           transition={{ repeat: Infinity, duration: 3 }}
         />
-        <motion.ellipse cx="40" cy="55" rx="20" ry="5"
-          fill="none" stroke={era.glow} strokeWidth="1" opacity="0.6"
-          animate={{ rx: [20, 18, 20] }}
-          transition={{ repeat: Infinity, duration: 3, delay: 0.5 }}
-        />
-        <motion.path
-          d="M40 15 L28 45 L40 40 L52 45 Z"
-          fill={`${era.glow}40`} stroke={era.glow} strokeWidth="1.5"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+        <circle cx="50" cy="50" r="3.5"
+          fill={era.glow}
           style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
         />
-        <motion.circle cx="40" cy="42"
-          r="3" fill={era.glow}
-          animate={{ opacity: [1, 0.5, 1] }}
-          transition={{ repeat: Infinity, duration: 1 }}
+        <circle cx="50" cy="50" r="1.5" fill="white" opacity="0.8" />
+      </motion.svg>
+    ),
+
+    // ── FUTURE — detailed spacecraft with wings, cockpit, engine plume ────────
+    future: (
+      <motion.svg width="100" height="100" viewBox="0 0 100 100"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <defs>
+          <radialGradient id="engine-fire" cx="50%" cy="0%" r="100%">
+            <stop offset="0%" stopColor={era.glow} stopOpacity="1" />
+            <stop offset="55%" stopColor={era.glow} stopOpacity="0.4" />
+            <stop offset="100%" stopColor={era.glow} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {/* Engine exhaust plume */}
+        <motion.path
+          d="M44 72 C42 80 40 88 38 96 L50 90 L62 96 C60 88 58 80 56 72"
+          fill="url(#engine-fire)" opacity="0.65"
+          animate={{ scaleY: [1, 1.35, 0.8, 1], opacity: [0.55, 0.9, 0.45, 0.65] }}
+          transition={{ repeat: Infinity, duration: 0.85, ease: "easeInOut" }}
+          style={{ transformOrigin: "50px 72px" }}
         />
+        {/* Wing strakes */}
+        <motion.path d="M38 55 L18 72 L32 69 L38 62Z"
+          fill={`${era.glow}18`} stroke={era.glow} strokeWidth="1"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+        />
+        <motion.path d="M62 55 L82 72 L68 69 L62 62Z"
+          fill={`${era.glow}18`} stroke={era.glow} strokeWidth="1"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.7, delay: 0.45 }}
+        />
+        {/* Fuselage */}
+        <motion.path
+          d="M50 11 C44 17 40 29 40 43 L40 68 C40 70 44 72 50 72 C56 72 60 70 60 68 L60 43 C60 29 56 17 50 11Z"
+          fill={`${era.glow}18`} stroke={era.glow} strokeWidth="1.5"
+          style={{ filter: `drop-shadow(0 0 8px ${era.glow}55)` }}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, delay: 0.2 }}
+        />
+        {/* Nose highlight */}
+        <motion.path d="M50 11 C47 15 46 22 47 27 C48 27 52 27 53 27 C54 22 53 15 50 11Z"
+          fill={era.glow} opacity="0.28"
+          initial={{ opacity: 0 }} animate={{ opacity: 0.28 }}
+          transition={{ duration: 1, delay: 0.8 }}
+        />
+        {/* Cockpit */}
+        <motion.ellipse cx="50" cy="33" rx="5" ry="7"
+          fill={`${era.glow}28`} stroke={era.glow} strokeWidth="1"
+          style={{ filter: `drop-shadow(0 0 6px ${era.glow})` }}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+        />
+        <ellipse cx="48" cy="31" rx="2" ry="3" fill="white" opacity="0.18" />
+        {/* Panel lines */}
+        <line x1="50" y1="40" x2="50" y2="68" stroke={era.glow} strokeWidth="0.5" opacity="0.35" />
+        <line x1="43" y1="50" x2="57" y2="50" stroke={era.glow} strokeWidth="0.5" opacity="0.35" />
+        {/* Engine nozzle */}
+        <ellipse cx="50" cy="70" rx="8" ry="3" fill={`${era.glow}25`} stroke={era.glow} strokeWidth="1" />
+        <motion.ellipse cx="50" cy="70" rx="5" ry="2"
+          fill={era.glow}
+          animate={{ opacity: [0.55, 1, 0.55], ry: [2, 3, 2] }}
+          transition={{ repeat: Infinity, duration: 0.8 }}
+          style={{ filter: `drop-shadow(0 0 10px ${era.glow})` }}
+        />
+        {/* Stars */}
+        {[[10,15],[85,22],[92,50],[8,70],[88,80]].map(([x,y],i) => (
+          <motion.circle key={i} cx={x} cy={y} r="0.8" fill="white"
+            animate={{ opacity: [0.2, 0.9, 0.2] }}
+            transition={{ repeat: Infinity, duration: 2 + i * 0.5, delay: i * 0.4 }}
+          />
+        ))}
       </motion.svg>
     ),
   };
 
   return (
-    <div style={{ filter: `drop-shadow(0 0 20px ${era.glow}60)` }}>
+    <div style={{ filter: `drop-shadow(0 0 24px ${era.glow}50)` }}>
       {icons[era.id] ?? null}
     </div>
   );
 }
 
-// Cinematic particle canvas
+// ─────────────────────────────────────────────────────────────────────────────
+// CinematicCanvas — particle system per era
+// ─────────────────────────────────────────────────────────────────────────────
 function CinematicCanvas({ era }: { era: typeof HISTORY_ERAS[0] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -1088,31 +1478,26 @@ function CinematicCanvas({ era }: { era: typeof HISTORY_ERAS[0] }) {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       for (const p of particles) {
         p.life++;
         p.x += p.vx;
         p.y += p.vy;
-
         const lifeRatio = p.life / p.maxLife;
         p.opacity = lifeRatio < 0.2
           ? lifeRatio / 0.2
           : lifeRatio > 0.8
           ? (1 - lifeRatio) / 0.2
           : 1;
-
         if (p.life >= p.maxLife ||
           p.x < -10 || p.x > canvas.width + 10 ||
           p.y < -10 || p.y > canvas.height + 10) {
           Object.assign(p, spawn());
         }
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${rgb}, ${p.opacity * 0.7})`;
         ctx.fill();
       }
-
       animId = requestAnimationFrame(animate);
     };
 
@@ -1121,9 +1506,6 @@ function CinematicCanvas({ era }: { era: typeof HISTORY_ERAS[0] }) {
   }, [era.id, era.particleColor]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none"
-    />
+    <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
   );
 }
