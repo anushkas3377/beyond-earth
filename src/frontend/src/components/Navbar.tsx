@@ -135,8 +135,22 @@ export default function Navbar() {
               );
             })}
             {user ? (
-              <button onClick={handleLogout} className="cta-secondary mt-4 py-3 text-center text-sm">Logout</button>
-            ) : (
+  <>
+    <Link
+      to="/profile"
+      onClick={() => setMobileOpen(false)}
+      className="px-4 py-3 rounded-lg text-base font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200"
+    >
+      👋 {user.user_metadata?.full_name || user.email}
+    </Link>
+    <button
+      onClick={handleLogout}
+      className="cta-secondary mt-2 py-3 text-center text-sm w-full"
+    >
+      Logout
+    </button>
+  </>
+) : (
               <>
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="cta-secondary mt-4 py-3 text-center text-sm">Login</Link>
                 <Link to="/signup" onClick={() => setMobileOpen(false)} className="cta-primary mt-2 py-3 text-center text-sm">Sign Up</Link>
