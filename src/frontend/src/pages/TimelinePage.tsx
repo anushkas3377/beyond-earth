@@ -536,16 +536,7 @@ function TimelineItem({
 function HistoryOfEverything() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.1 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const [prevIndex, setPrevIndex] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -558,74 +549,88 @@ function HistoryOfEverything() {
         Math.floor(progress * HISTORY_ERAS.length),
         HISTORY_ERAS.length - 1
       );
-      setActiveIndex(index);
+      if (index !== activeIndex) {
+        setPrevIndex(activeIndex);
+        setActiveIndex(index);
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [activeIndex]);
 
   const era = HISTORY_ERAS[activeIndex];
 
   return (
-    <div ref={containerRef} style={{ height: `${HISTORY_ERAS.length * 100}vh` }}>
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
+    <div ref={containerRef} style={{ height: `${HISTORY_ERAS.length * 120}vh` }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* Background */}
+        {/* Animated Background */}
         <motion.div
-          className="absolute inset-0 transition-all duration-1000"
-          style={{ background: era.bg }}
           key={era.id + "-bg"}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
+          style={{ background: era.bg }}
         />
 
-        {/* Glow effect */}
+        {/* Animated particles layer */}
+        <ParticleLayer era={era} />
+
+        {/* Glow orb */}
         <motion.div
-          className="absolute inset-0 pointer-events-none"
+          key={era.id + "-orb"}
+          className="absolute rounded-full blur-3xl pointer-events-none"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.15 }}
+          transition={{ duration: 1.5 }}
           style={{
-            background: `radial-gradient(ellipse 60% 40% at 50% 50%, ${era.glow}15 0%, transparent 70%)`,
+            width: "60vw",
+            height: "60vw",
+            background: era.glow,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
           }}
-          key={era.id + "-glow"}
         />
 
         {/* Progress dots */}
         <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-20">
           {HISTORY_ERAS.map((e, i) => (
-            <div
+            <motion.div
               key={e.id}
-              className="w-2 h-2 rounded-full transition-all duration-300"
+              animate={{
+                scale: i === activeIndex ? 1.8 : 1,
+                opacity: i === activeIndex ? 1 : 0.3,
+              }}
+              transition={{ duration: 0.3 }}
+              className="w-2 h-2 rounded-full"
               style={{
-                backgroundColor: i === activeIndex ? era.glow : "rgba(255,255,255,0.2)",
-                boxShadow: i === activeIndex ? `0 0 8px ${era.glow}` : "none",
-                transform: i === activeIndex ? "scale(1.5)" : "scale(1)",
+                backgroundColor: i === activeIndex ? era.glow : "white",
+                boxShadow: i === activeIndex ? `0 0 10px ${era.glow}` : "none",
               }}
             />
           ))}
         </div>
 
-        {/* Main Content */}
+        {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center max-w-4xl mx-auto">
 
-          {/* Emoji */}
-          <motion.div
-            key={era.id + "-emoji"}
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.6, type: "spring" }}
-            className="text-7xl sm:text-8xl mb-6"
-          >
-            {era.emoji}
-          </motion.div>
+          {/* Emoji with special animation per era */}
+          <EraEmoji era={era} />
 
           {/* Year badge */}
           <motion.div
             key={era.id + "-year"}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
+            initial={{ opacity: 0, y: -30, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="px-5 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-5"
             style={{
-              backgroundColor: `${era.glow}20`,
-              border: `1px solid ${era.glow}50`,
+              backgroundColor: `${era.glow}25`,
+              border: `1px solid ${era.glow}70`,
               color: era.glow,
+              boxShadow: `0 0 20px ${era.glow}30`,
             }}
           >
             {era.year}
@@ -634,11 +639,13 @@ function HistoryOfEverything() {
           {/* Title */}
           <motion.h2
             key={era.id + "-title"}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-display text-4xl sm:text-6xl font-black text-white mb-2"
-            style={{ textShadow: `0 0 40px ${era.glow}60` }}
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.3, type: "spring", bounce: 0.3 }}
+            className="font-display text-5xl sm:text-7xl font-black text-white mb-3"
+            style={{
+              textShadow: `0 0 60px ${era.glow}80, 0 0 120px ${era.glow}40`,
+            }}
           >
             {era.title}
           </motion.h2>
@@ -646,10 +653,10 @@ function HistoryOfEverything() {
           {/* Subtitle */}
           <motion.p
             key={era.id + "-sub"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="text-sm font-semibold uppercase tracking-widest mb-6"
+            initial={{ opacity: 0, letterSpacing: "0.5em" }}
+            animate={{ opacity: 1, letterSpacing: "0.25em" }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-xs font-black uppercase mb-6"
             style={{ color: era.glow }}
           >
             {era.subtitle}
@@ -660,7 +667,7 @@ function HistoryOfEverything() {
             key={era.id + "-desc"}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
             className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mb-8"
           >
             {era.description}
@@ -669,39 +676,196 @@ function HistoryOfEverything() {
           {/* Facts */}
           <motion.div
             key={era.id + "-facts"}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
             className="flex flex-wrap justify-center gap-3"
           >
-            {era.facts.map((fact) => (
-              <div
+            {era.facts.map((fact, i) => (
+              <motion.div
                 key={fact}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.7 + i * 0.1 }}
                 className="px-4 py-2 rounded-lg text-xs font-semibold"
                 style={{
-                  backgroundColor: `${era.glow}10`,
-                  border: `1px solid ${era.glow}30`,
-                  color: "rgba(255,255,255,0.8)",
+                  backgroundColor: `${era.glow}15`,
+                  border: `1px solid ${era.glow}40`,
+                  color: "rgba(255,255,255,0.85)",
+                  boxShadow: `0 0 15px ${era.glow}20`,
                 }}
               >
                 ✦ {fact}
-              </div>
+              </motion.div>
             ))}
           </motion.div>
 
-          {/* Counter */}
+          {/* Scroll indicator */}
           <motion.div
             className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
           >
-            <span className="text-xs text-slate-500">
+            <span className="text-xs font-bold" style={{ color: era.glow }}>
               {activeIndex + 1} / {HISTORY_ERAS.length}
             </span>
-            <div className="w-px h-8" style={{ background: `linear-gradient(to bottom, ${era.glow}, transparent)` }} />
+            <motion.div
+              className="w-px h-10"
+              style={{
+                background: `linear-gradient(to bottom, ${era.glow}, transparent)`,
+                boxShadow: `0 0 8px ${era.glow}`,
+              }}
+              animate={{ scaleY: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            />
           </motion.div>
         </div>
       </div>
     </div>
+  );
+}
+
+// Special emoji animation per era
+function EraEmoji({ era }: { era: typeof HISTORY_ERAS[0] }) {
+  const animations: Record<string, object> = {
+    bigbang: {
+      initial: { scale: 0, rotate: 0 },
+      animate: { scale: [0, 2, 1], rotate: [0, 180, 360] },
+      transition: { duration: 1, type: "spring" },
+    },
+    stars: {
+      initial: { scale: 0, opacity: 0 },
+      animate: { scale: [0, 1.3, 1], opacity: 1, rotate: [0, 20, -20, 0] },
+      transition: { duration: 1, repeat: Infinity, repeatDelay: 3 },
+    },
+    earth: {
+      initial: { scale: 0, rotateY: -180 },
+      animate: { scale: 1, rotateY: 0, rotate: [0, 5, -5, 0] },
+      transition: { duration: 1.2, rotate: { repeat: Infinity, duration: 4 } },
+    },
+    life: {
+      initial: { scale: 0 },
+      animate: { scale: [1, 1.2, 1] },
+      transition: { duration: 1.5, repeat: Infinity },
+    },
+    dinosaurs: {
+      initial: { x: -100, opacity: 0 },
+      animate: { x: 0, opacity: 1 },
+      transition: { duration: 0.8, type: "spring", bounce: 0.5 },
+    },
+    humans: {
+      initial: { y: 50, opacity: 0 },
+      animate: { y: 0, opacity: 1, rotate: [0, -5, 5, 0] },
+      transition: { duration: 0.8, rotate: { repeat: Infinity, duration: 3 } },
+    },
+    civilization: {
+      initial: { y: 60, opacity: 0 },
+      animate: { y: 0, opacity: 1 },
+      transition: { duration: 1, type: "spring" },
+    },
+    inventions: {
+      initial: { scale: 0, rotate: -90 },
+      animate: { scale: 1, rotate: 0 },
+      transition: { duration: 0.8, type: "spring", bounce: 0.6 },
+    },
+    religion: {
+      initial: { scale: 0, opacity: 0 },
+      animate: { scale: 1, opacity: 1, rotate: [0, 5, -5, 0] },
+      transition: { duration: 1, rotate: { repeat: Infinity, duration: 5 } },
+    },
+    future: {
+      initial: { y: 80, opacity: 0 },
+      animate: { y: [0, -15, 0], opacity: 1 },
+      transition: { duration: 1, y: { repeat: Infinity, duration: 2 } },
+    },
+  };
+
+  const anim = animations[era.id] || {
+    initial: { scale: 0 },
+    animate: { scale: 1 },
+    transition: { duration: 0.8 },
+  };
+
+  return (
+    <motion.div
+      key={era.id + "-emoji"}
+      {...anim}
+      className="text-7xl sm:text-8xl mb-6 select-none"
+      style={{ filter: `drop-shadow(0 0 30px ${era.glow})` }}
+    >
+      {era.emoji}
+    </motion.div>
+  );
+}
+
+// Particle layer — alag alag era ke liye
+function ParticleLayer({ era }: { era: typeof HISTORY_ERAS[0] }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles: {
+      x: number; y: number; vx: number; vy: number;
+      size: number; opacity: number; life: number;
+    }[] = [];
+
+    const count = era.id === "bigbang" ? 150 :
+                  era.id === "stars" ? 100 :
+                  era.id === "future" ? 80 : 50;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: era.id === "bigbang" ? canvas.width / 2 : Math.random() * canvas.width,
+        y: era.id === "bigbang" ? canvas.height / 2 : Math.random() * canvas.height,
+        vx: era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5,
+        vy: era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5,
+        size: Math.random() * (era.id === "bigbang" ? 4 : 2) + 1,
+        opacity: Math.random(),
+        life: Math.random(),
+      });
+    }
+
+    let animId: number;
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.003;
+        p.opacity = Math.sin(p.life * Math.PI);
+
+        if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height || p.life <= 0) {
+          p.x = era.id === "bigbang" ? canvas.width / 2 : Math.random() * canvas.width;
+          p.y = era.id === "bigbang" ? canvas.height / 2 : Math.random() * canvas.height;
+          p.vx = era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5;
+          p.vy = era.id === "bigbang" ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5;
+          p.life = 1;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = era.particleColor + Math.floor(p.opacity * 255).toString(16).padStart(2, "0");
+        ctx.fill();
+      }
+      animId = requestAnimationFrame(animate);
+    };
+
+    animate();
+    return () => cancelAnimationFrame(animId);
+  }, [era.id]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none"
+      style={{ opacity: 0.6 }}
+    />
   );
 }
