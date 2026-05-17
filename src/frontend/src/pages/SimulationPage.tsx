@@ -184,12 +184,12 @@ export default function SimulationPage() {
                     <p
                       className="font-display text-7xl font-black mb-3 leading-none select-none"
                       style={{
-                        background: `linear-gradient(135deg, ${scenario.accentFrom}, transparent)`,
+                        background:`linear-gradient(135deg, #00E5FF, #6C63FF)`,
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                         backgroundClip: "text",
                         color: "transparent",
-                        opacity: 0.5,
+                        opacity: 0.6,
                       }}
                       aria-hidden="true"
                     >
